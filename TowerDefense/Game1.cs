@@ -8,17 +8,29 @@ namespace TowerDefense
     {
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
+        Sprite moneyIMG = default;
+        Sprite healthIMG = default;
+
+        int moneyHealthSizer = 50;
+        int moneyHealthRightScreenBuffer = 150;
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            IsMouseVisible = true;
+            IsMouseVisible = true;            
+            graphics.PreferredBackBufferHeight= 980;
+            graphics.PreferredBackBufferWidth = 1900;
+            graphics.ApplyChanges();
         }
 
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+
+            moneyIMG = new Sprite(null, new Rectangle(GraphicsDevice.Viewport.Width - moneyHealthRightScreenBuffer, 25, moneyHealthSizer, moneyHealthSizer), Color.Black, 0, Vector2.Zero);
+
+            healthIMG = new Sprite(null, new Rectangle(GraphicsDevice.Viewport.Width - moneyHealthRightScreenBuffer, moneyIMG.Pos.Height * 2, moneyHealthSizer, moneyHealthSizer), Color.Black, 0, Vector2.Zero);
 
             base.Initialize();
         }
@@ -27,6 +39,9 @@ namespace TowerDefense
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            moneyIMG.Tex = Content.Load<Texture2D>("money");
+            healthIMG.Tex = Content.Load<Texture2D>("health");
+
             // TODO: use this.Content to load your game content here
         }
 
@@ -34,6 +49,7 @@ namespace TowerDefense
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+
 
             // TODO: Add your update logic here
 
@@ -45,6 +61,14 @@ namespace TowerDefense
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+
+            spriteBatch.Begin();
+
+            moneyIMG.Draw(spriteBatch);
+
+            healthIMG.Draw(spriteBatch);
+
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }
