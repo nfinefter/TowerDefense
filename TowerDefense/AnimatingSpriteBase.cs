@@ -14,7 +14,6 @@ namespace TowerDefense
         protected abstract List<Rectangle> SourceRectangles { get; }
 
         int RectIndex;
-
         public override Rectangle? SourceRectangle => SourceRectangles[RectIndex];
 
         public AnimatingSpriteBase(Texture2D tex, Rectangle pos, Color color, float rotation, Vector2 origin/*, List<Rectangle> sourceRectangle*/)

@@ -11,8 +11,17 @@ namespace TowerDefense
 {
     sealed public class Player : PlayerBase
     {
-        public Player(Texture2D tex, Rectangle pos, Color color, float rotation, Vector2 origin) : base(tex, pos, color, rotation, origin)
+        int RectIndex;
+
+        public override Rectangle? SourceRectangle => SourceRectangles[RectIndex];
+
+        protected override List<Rectangle> SourceRectangles => throw new NotImplementedException();
+
+        public Player(Texture2D tex, Rectangle pos, Color color, float rotation, Vector2 origin, int level, int xp)
+            : base(tex, pos, color, rotation, origin, level, xp)
         {
         }
+
+
     }
 }

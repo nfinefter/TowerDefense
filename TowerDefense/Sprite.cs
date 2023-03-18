@@ -19,5 +19,10 @@ namespace TowerDefense
         }
 
         public override Rectangle? SourceRectangle => null;
+
+        public override void Update()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

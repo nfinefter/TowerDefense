@@ -13,12 +13,13 @@ namespace TowerDefense
     {
         private int dmgTaken;
 
-        public Enemy(Texture2D tex, Rectangle pos, Color color, float rotation, Vector2 origin, int maxHealth, int health, int speed)
-            : base(tex, pos, color, rotation, origin, maxHealth, health, speed)
-        {
-        }
-
         public override Rectangle? SourceRectangle => throw new NotImplementedException();
+
+        public Enemy(Texture2D tex, Rectangle pos, Color color, float rotation, Vector2 origin, int difficulty, int health, int speed)
+            : base(tex, pos, color, rotation, origin, difficulty, health, speed)
+        {
+
+        }
 
         public void Attacked(int dmg)
         {
@@ -31,6 +32,10 @@ namespace TowerDefense
 
             Health -= dmgTaken;
 
+            if (MaxHealth % Health >= 10)
+            {
+                Difficulty--;            
+            }
         }
     }
 }

@@ -10,7 +10,8 @@ namespace TowerDefense
         private SpriteBatch spriteBatch;
         SpriteBase moneyIMG = default;
         SpriteBase healthIMG = default;
-        SpriteBase dartIMG = default;
+        Player monkey = default;
+
 
         int moneyHealthSizer = 50;
         int moneyHealthRightScreenBuffer = 150;
@@ -33,6 +34,8 @@ namespace TowerDefense
 
             healthIMG = new Sprite(null, new Rectangle(GraphicsDevice.Viewport.Width - moneyHealthRightScreenBuffer, moneyIMG.Pos.Height * 2, moneyHealthSizer, moneyHealthSizer), Color.Black, 0, Vector2.Zero);
 
+            monkey = new Player(null, new Rectangle(0, 0, 100, 100), Color.White, 0, Vector2.Zero, 0, 0);
+
             base.Initialize();
         }
 
@@ -42,6 +45,7 @@ namespace TowerDefense
 
             moneyIMG.Tex = Content.Load<Texture2D>("money");
             healthIMG.Tex = Content.Load<Texture2D>("health");
+            monkey.Tex = Content.Load<Texture2D>("");
 
             // TODO: use this.Content to load your game content here
         }
