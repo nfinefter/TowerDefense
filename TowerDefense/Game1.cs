@@ -8,8 +8,9 @@ namespace TowerDefense
     {
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
-        Sprite moneyIMG = default;
-        Sprite healthIMG = default;
+        SpriteBase moneyIMG = default;
+        SpriteBase healthIMG = default;
+        SpriteBase dartIMG = default;
 
         int moneyHealthSizer = 50;
         int moneyHealthRightScreenBuffer = 150;
@@ -49,6 +50,7 @@ namespace TowerDefense
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+
 
 
             // TODO: Add your update logic here

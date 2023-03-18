@@ -9,27 +9,15 @@ using System.Threading.Tasks;
 
 namespace TowerDefense
 {
-    public class Sprite
+    public sealed class Sprite : SpriteBase
     {
-        public Texture2D Tex;
-        public Rectangle Pos;
-        public Color Color;
-        public float Rotation;
-        public Vector2 Origin { get; }
 
         public Sprite(Texture2D tex, Rectangle pos, Color color, float rotation, Vector2 origin)
+            : base(tex, pos, color, rotation, origin)
         {
-            Tex = tex;
-            Pos = pos;
-            Color = color;
-            Rotation = rotation;
-            Origin = origin;
+            
         }
 
-        public void Draw(SpriteBatch spriteBatch)
-        {
-            spriteBatch.Draw(Tex, Pos,null,Color, Rotation, Origin, SpriteEffects.None, 0);
-        }
-
+        public override Rectangle? SourceRectangle => null;
     }
 }
