@@ -15,8 +15,8 @@ namespace TowerDefense
 
         public override Rectangle? SourceRectangle => throw new NotImplementedException();
 
-        public Enemy(Texture2D tex, Rectangle pos, Color color, float rotation, Vector2 origin, int difficulty, int health, int speed)
-            : base(tex, pos, color, rotation, origin, difficulty, health, speed)
+        public Enemy(Texture2D tex, Rectangle pos, Color color, float rotation, Vector2 origin, int difficulty, int speed)
+            : base(tex, pos, color, rotation, origin, difficulty, speed)
         {
 
         }

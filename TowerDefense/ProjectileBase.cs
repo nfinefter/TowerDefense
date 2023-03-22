@@ -11,10 +11,10 @@ namespace TowerDefense
 {
     public abstract class ProjectileBase : SpriteBase
     {
-        int Damage;
-        int Speed;
+        public int Damage;
+        public int Speed;
 
-        protected ProjectileBase(Texture2D tex, Rectangle pos, Color color, float rotation, Vector2 origin, int damage, int speed) 
+        protected ProjectileBase(Texture2D tex, Rectangle pos, Color color, float rotation, Vector2 origin, int damage, int speed)
             : base(tex, pos, color, rotation, origin)
         {
             Damage = damage;
