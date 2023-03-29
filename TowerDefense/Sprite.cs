@@ -11,11 +11,13 @@ namespace TowerDefense
 {
     public sealed class Sprite : SpriteBase
     {
+        Vector2 origin;
+        public override Vector2 Origin { get => origin; }
 
         public Sprite(Texture2D tex, Rectangle pos, Color color, float rotation, Vector2 origin)
-            : base(tex, pos, color, rotation, origin)
+            : base(tex, pos, color, rotation)
         {
-            
+            this.origin = origin;
         }
 
         public override Rectangle? SourceRectangle => null;

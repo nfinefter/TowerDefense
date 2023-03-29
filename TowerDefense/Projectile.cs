@@ -13,6 +13,8 @@ namespace TowerDefense
     {
         public override Rectangle? SourceRectangle => throw new NotImplementedException();
 
+        public override Vector2 Origin => throw new NotImplementedException();
+
         public Projectile(Texture2D tex, Rectangle pos, Color color, float rotation, Vector2 origin, int damage, int speed)
             : base(tex, pos, color, rotation, origin, damage, speed)
         {

@@ -17,14 +17,19 @@ namespace TowerDefense
         {
             List<Rectangle> images = new List<Rectangle>();
 
-            Point moveBetweenImg = new Point(image.Width / frames.X, image.Height / frames.Y);
+            Point moveBetweenImg = new Point(0, 0);
 
-            for (int i = 0; i < frames.X; i+= moveBetweenImg.X)
+            Point imageSize = new Point(image.Width / frames.X, image.Height / frames.Y);
+
+            for (int i = 0; i < frames.X; i++)
             {
-                for (int j= 0; j < frames.Y; j+= moveBetweenImg.Y)
+                for (int j= 0; j < frames.Y; j++)
                 {
-                    images.Add(new Rectangle(i, j, moveBetweenImg.X, moveBetweenImg.Y));
+                    images.Add(new Rectangle(moveBetweenImg.X, moveBetweenImg.Y, image.Width / frames.X, image.Height / frames.Y));
+                    moveBetweenImg.Y += imageSize.Y;
                 }
+                moveBetweenImg.Y = 0;
+                moveBetweenImg.X += imageSize.X;
             }
 
             return images;

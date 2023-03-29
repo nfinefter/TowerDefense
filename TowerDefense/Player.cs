@@ -11,14 +11,10 @@ namespace TowerDefense
 {
     public sealed class Player : PlayerBase
     {
-        int RectIndex;
+        public override Vector2 Origin => new Vector2(SourceRectangle.Value.Width / 2, SourceRectangle.Value.Height / 2);
 
-        public override Rectangle? SourceRectangle => SourceRectangles[RectIndex];
-
-        protected override List<Rectangle> SourceRectangles => new List<Rectangle>();
-
-        public Player(Texture2D tex, Rectangle pos, Color color, float rotation, Vector2 origin, int level, int xp, int dmgMultiplier)
-            : base(tex, pos, color, rotation, origin, level, xp, dmgMultiplier)
+        public Player(Texture2D tex, Rectangle pos, Color color, float rotation, Vector2 origin, List<Rectangle> sourceRectangle, int level, int xp, int dmgMultiplier)
+            : base(tex, pos, color, rotation, origin, sourceRectangle, level, xp, dmgMultiplier)
         {
         }
 

@@ -13,12 +13,16 @@ namespace TowerDefense
     {
         private int dmgTaken;
 
-        public override Rectangle? SourceRectangle => throw new NotImplementedException();
+        public override Rectangle? SourceRectangle => null;
+
+        private Vector2 origin;
+
+        public override Vector2 Origin => origin;
 
         public Enemy(Texture2D tex, Rectangle pos, Color color, float rotation, Vector2 origin, int difficulty, int speed)
             : base(tex, pos, color, rotation, origin, difficulty, speed)
         {
-
+            this.origin = origin;
         }
 
         public void Attacked(int dmg)

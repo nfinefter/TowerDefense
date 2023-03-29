@@ -15,16 +15,15 @@ namespace TowerDefense
         public Rectangle Pos;
         public Color Color;
         public float Rotation;
-        public Vector2 Origin { get; }
+        public abstract Vector2 Origin { get; }
         public abstract Rectangle? SourceRectangle { get; }
 
-        public SpriteBase(Texture2D tex, Rectangle pos, Color color, float rotation, Vector2 origin)
+        public SpriteBase(Texture2D tex, Rectangle pos, Color color, float rotation)
         {
             Tex = tex;
             Pos = pos;
             Color = color;
             Rotation = rotation;
-            Origin = origin;
         }
 
         public void Draw(SpriteBatch spriteBatch)

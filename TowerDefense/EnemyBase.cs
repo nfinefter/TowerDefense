@@ -17,7 +17,7 @@ namespace TowerDefense
         public int Difficulty;
 
         protected EnemyBase(Texture2D tex, Rectangle pos, Color color, float rotation, Vector2 origin, int difficulty, int speed) 
-            : base(tex, pos, color, rotation, origin)
+            : base(tex, pos, color, rotation)
         {   
             Speed = speed;
             Difficulty = difficulty;

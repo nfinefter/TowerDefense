@@ -1,15 +1,16 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
+using System.Collections.Generic;
 
 namespace TowerDefense
 {
     public abstract class PlayerBase : AnimatingSpriteBase
     {
-        int RectIndex;
+        private List<Rectangle> sourceRectangles;
 
-        public override Rectangle? SourceRectangle => SourceRectangles[RectIndex];
-        
+        protected override List<Rectangle> SourceRectangles => sourceRectangles;
+
         public int Level;
 
         public int XP;
@@ -18,12 +19,13 @@ namespace TowerDefense
 
         public int DmgMultiplier;
 
-        public PlayerBase(Texture2D tex, Rectangle pos, Color color, float rotation, Vector2 origin, int level, int xp, int dmgMultiplier)
-            : base(tex, pos, color, rotation, origin)
+        public PlayerBase(Texture2D tex, Rectangle pos, Color color, float rotation, Vector2 origin, List<Rectangle> sourceRectangle, int level, int xp, int dmgMultiplier)
+            : base(tex, pos, color, rotation, origin, sourceRectangle)
         {
             Level = level;
             XP = xp;
             DmgMultiplier = dmgMultiplier;
+            sourceRectangles = sourceRectangle;
         }
     }
 }

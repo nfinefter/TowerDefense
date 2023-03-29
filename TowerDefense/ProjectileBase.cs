@@ -15,7 +15,7 @@ namespace TowerDefense
         public int Speed;
 
         protected ProjectileBase(Texture2D tex, Rectangle pos, Color color, float rotation, Vector2 origin, int damage, int speed)
-            : base(tex, pos, color, rotation, origin)
+            : base(tex, pos, color, rotation)
         {
             Damage = damage;
             Speed = speed;
