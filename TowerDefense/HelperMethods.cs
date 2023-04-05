@@ -23,7 +23,7 @@ namespace TowerDefense
 
             for (int i = 0; i < frames.X; i++)
             {
-                for (int j= 0; j < frames.Y; j++)
+                for (int j = 0; j < frames.Y; j++)
                 {
                     images.Add(new Rectangle(moveBetweenImg.X, moveBetweenImg.Y, image.Width / frames.X, image.Height / frames.Y));
                     moveBetweenImg.Y += imageSize.Y;

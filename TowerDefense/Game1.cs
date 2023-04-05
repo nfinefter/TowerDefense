@@ -2,6 +2,8 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+using MonoGame.Extended;
+
 using System;
 using System.Collections.Generic;
 
@@ -16,13 +18,23 @@ namespace TowerDefense
         List<Player> monkeys = new List<Player>();
         List<Enemy> bloons = new List<Enemy>();
         List<Projectile> projectiles= new List<Projectile>();
+        Texture2D monkeyImage;
+        Texture2D bloonImage;
+        List<Rectangle> MonkeySource;
+        float money = 1000;
+        int health = 100;
+        SpriteFont spriteFont;
+
+        Rectangle sellButton;
+        Rectangle upgradeButton;
 
         int updates = 0;
         int draws = 0;
-
+        ButtonState prevState = ButtonState.Released;
+        ButtonState currState;
 
         int moneyHealthSizer = 50;
-        int moneyHealthRightScreenBuffer = 150;
+        int moneyHealthRightScreenBuffer = 250;
 
         public Game1()
         {
@@ -40,26 +52,33 @@ namespace TowerDefense
             graphics.PreferredBackBufferHeight= 980;
             graphics.PreferredBackBufferWidth = 1900;
             graphics.ApplyChanges();
-          
+
+           
+
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
-            Texture2D monkeyImage = Content.Load<Texture2D>("DartMnokeySpriteSheetEdited");
-            Texture2D bloonImage = Content.Load<Texture2D>("balloon");
+            spriteFont = Content.Load<SpriteFont>("File");
+
+            monkeyImage = Content.Load<Texture2D>("DartMnokeySpriteSheetEdited");
+            bloonImage = Content.Load<Texture2D>("balloon");
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            List<Rectangle> MonkeySource = SourceRectangleFinder(monkeyImage, new Point(6, 1));
+            MonkeySource = SourceRectangleFinder(monkeyImage, new Point(6, 1));
 
             moneyIMG = new Sprite(Content.Load<Texture2D>("money"), new Rectangle(GraphicsDevice.Viewport.Width - moneyHealthRightScreenBuffer, 25, moneyHealthSizer, moneyHealthSizer), Color.Black, 0, Vector2.Zero);
 
             healthIMG = new Sprite(Content.Load<Texture2D>("health"), new Rectangle(GraphicsDevice.Viewport.Width - moneyHealthRightScreenBuffer, moneyIMG.Pos.Height * 2, moneyHealthSizer, moneyHealthSizer), Color.Black, 0, Vector2.Zero);
 
-            monkeys.Add(new Player(monkeyImage, new Rectangle(100, 100, 100, 100), Color.White, 0, new Vector2(monkeyImage.Width / 2, monkeyImage.Height / 2), MonkeySource, 0, 0, 5));
+            monkeys.Add(new Player(monkeyImage, new Rectangle(GraphicsDevice.Viewport.Width - 200, 200, 100, 100), Color.White, 0, new Vector2(monkeyImage.Width / 2, monkeyImage.Height / 2), MonkeySource, 0, 0, 5));
 
             bloons.Add(new Enemy(bloonImage, new Rectangle(20, 20, 20, 40), Color.White, 0, new Vector2(bloonImage.Width / 2, bloonImage.Height / 2), 0, 1));
+
+            sellButton = new Rectangle(moneyIMG.Pos.X + 10, GraphicsDevice.Viewport.Height - 60, 110, 50);
+            upgradeButton = new Rectangle(sellButton.X + 120, GraphicsDevice.Viewport.Height - 60, 110, 50);
 
             // TODO: use this.Content to load your game content here
         }
@@ -70,9 +89,22 @@ namespace TowerDefense
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            currState = Mouse.GetState().LeftButton;
+
+            if (Vector2.Distance(new Vector2(monkeys[0].Pos.X, monkeys[0].Pos.Y), new Vector2(Mouse.GetState().Position.X, Mouse.GetState().Position.Y)) < 100 && Mouse.GetState().LeftButton == ButtonState.Pressed && prevState == ButtonState.Released)
+            {
+                monkeys.Add(new Player(monkeyImage, monkeys[0].Pos, Color.White, 0, new Vector2(monkeyImage.Width / 2, monkeyImage.Height / 2), MonkeySource, 0, 0, 5));
+                money -= 100;
+            }
+            if (Vector2.Distance(new Vector2(monkeys[monkeys.Count - 1].Pos.X, monkeys[monkeys.Count - 1].Pos.Y), new Vector2(Mouse.GetState().Position.X, Mouse.GetState().Position.Y)) < 20 && Mouse.GetState().LeftButton == ButtonState.Pressed)
+            {
+                monkeys[monkeys.Count - 1].Pos = new Rectangle(Mouse.GetState().Position, new Point(monkeys[0].Pos.Width, monkeys[0].Pos.Height));
+            }
+
+
             // TODO: Add your update logic here
-            monkeys[0].test += gameTime.ElapsedGameTime;
-            monkeys[0].Update();
+
+            prevState = currState;
 
             base.Update(gameTime);
         }
@@ -95,10 +127,30 @@ namespace TowerDefense
 
             healthIMG.Draw(spriteBatch);
             Console.WriteLine(monkeys[0].RectIndex);
-       //     Console.WriteLine(monkeys[0].SourceRectangle);
-            monkeys[0].Draw(spriteBatch);
 
-            bloons[0].Draw(spriteBatch);
+            for (int i = 0; i < monkeys.Count; i++)
+            {
+                monkeys[i].Draw(spriteBatch);
+            }
+
+            for (int i = 0; i < bloons.Count; i++)
+            {
+                bloons[i].Draw(spriteBatch);
+            }
+
+            spriteBatch.DrawString(spriteFont, $"{money}", new Vector2(moneyIMG.Pos.X + 50, moneyIMG.Pos.Y + 20), Color.Black);
+            spriteBatch.DrawString(spriteFont, $"{health}", new Vector2(healthIMG.Pos.X + 50, healthIMG.Pos.Y + 20), Color.Black);
+            spriteBatch.DrawString(spriteFont, "Cost :100", new Vector2(monkeys[0].Pos.X + 50, monkeys[0].Pos.Y + 20), Color.Black);
+
+            spriteBatch.FillRectangle(sellButton, Color.Red, 0);
+            Vector2 size = spriteFont.MeasureString("Sell");
+            spriteBatch.DrawString(spriteFont, "Sell", new Vector2(sellButton.X + sellButton.Width / 2 - (size.X /2), sellButton.Y + sellButton.Height / 2 - (size.Y / 2)), Color.Black);
+
+            spriteBatch.FillRectangle(upgradeButton, Color.Green, 0);
+            size = spriteFont.MeasureString("Upgrade");
+            spriteBatch.DrawString(spriteFont, "Upgrade", new Vector2(upgradeButton.X + upgradeButton.Width / 2 - (size.X / 2), upgradeButton.Y + upgradeButton.Height / 2 - (size.Y / 2)), Color.Black);
+
+            spriteBatch.DrawLine(new Vector2(GraphicsDevice.Viewport.Width - 250, 0), new Vector2(GraphicsDevice.Viewport.Width - 250, GraphicsDevice.Viewport.Height), Color.Black, 1, 0);
 
             spriteBatch.End();
 
