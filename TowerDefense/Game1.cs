@@ -7,6 +7,8 @@ using MonoGame.Extended;
 using System;
 using System.Collections.Generic;
 
+using WeightedDirectedGraphs;
+
 namespace TowerDefense
 {
     public class Game1 : Game
@@ -36,6 +38,9 @@ namespace TowerDefense
         int moneyHealthSizer = 50;
         int moneyHealthRightScreenBuffer = 250;
 
+        int MapXBorder;
+        Map map = new Map();
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -47,13 +52,17 @@ namespace TowerDefense
         {
             // TODO: Add your initialization logic here
 
+           
+
             TargetElapsedTime = TimeSpan.FromMilliseconds(17);
 
             graphics.PreferredBackBufferHeight= 980;
             graphics.PreferredBackBufferWidth = 1900;
             graphics.ApplyChanges();
 
-           
+            MapXBorder = GraphicsDevice.Viewport.Width - 250;
+
+            List<Vertex<Point>> path = map.GeneratePath(MapXBorder, GraphicsDevice.Viewport.Height);
 
             base.Initialize();
         }
@@ -88,6 +97,8 @@ namespace TowerDefense
             updates++;
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+
+
 
             currState = Mouse.GetState().LeftButton;
 
@@ -150,7 +161,13 @@ namespace TowerDefense
             size = spriteFont.MeasureString("Upgrade");
             spriteBatch.DrawString(spriteFont, "Upgrade", new Vector2(upgradeButton.X + upgradeButton.Width / 2 - (size.X / 2), upgradeButton.Y + upgradeButton.Height / 2 - (size.Y / 2)), Color.Black);
 
-            spriteBatch.DrawLine(new Vector2(GraphicsDevice.Viewport.Width - 250, 0), new Vector2(GraphicsDevice.Viewport.Width - 250, GraphicsDevice.Viewport.Height), Color.Black, 1, 0);
+            spriteBatch.DrawLine(new Vector2(MapXBorder, 0), new Vector2(MapXBorder, GraphicsDevice.Viewport.Height), Color.Black, 1, 0);
+
+            for (int i = 0; i < map.Graph.Count; i++)
+            {
+                spriteBatch.DrawPoint(map.Graph[i].Value.X, map.Graph[i].Value.Y, Color.Black);
+            }
+       
 
             spriteBatch.End();
 
