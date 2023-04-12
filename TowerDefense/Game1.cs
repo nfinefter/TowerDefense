@@ -13,6 +13,8 @@ namespace TowerDefense
 {
     public class Game1 : Game
     {
+        public static int size = 15;
+
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
         SpriteBase moneyIMG = default;
@@ -172,7 +174,8 @@ namespace TowerDefense
 
             for (int i = 0; i < path.Count; i++)
             {
-                spriteBatch.DrawRectangle();
+                //Fix next time to draw texture tiles
+                spriteBatch.DrawRectangle(new Rectangle(path[i].Value.X, path[i].Value.Y, MapXBorder / size, GraphicsDevice.Viewport.Height.size));
             }
             
 

@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 
 using WeightedDirectedGraphs;
 
+using static TowerDefense.Game1;
+
 namespace TowerDefense
 {
     public sealed class Map 
@@ -60,8 +62,7 @@ namespace TowerDefense
         public void GenerateGraph(int scrWidth, int scrHeight)
         {
             Graph = new Graph<Point>();
-            
-            int size = 400;
+
             
             for (int x = 0; x < scrWidth; x +=size)
             {
