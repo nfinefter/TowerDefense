@@ -14,7 +14,7 @@ namespace TowerDefense
     {
         Vertex<Point> Start;
         Vertex<Point> End;
-        List<Vertex<Point>> Path;
+        List<Vertex<Point>> Path = new List<Vertex<Point>>();
         public Graph<Point> Graph;
 
         public Map ()
@@ -24,64 +24,48 @@ namespace TowerDefense
 
         public List<Vertex<Point>> GeneratePath(int scrWidth, int scrHeight)
         {
-            Random rand = new Random();
-
-            int xBound = scrWidth / 5;
-
-            Start = new Vertex<Point>(new Point(rand.Next(0, xBound), rand.Next(0, scrHeight)));
-
-            xBound = scrWidth / 5;
-
-            xBound = scrWidth - xBound;
-
-            End = new Vertex<Point>(new Point(rand.Next(0, xBound), rand.Next(0, scrHeight)));          
-           
             GenerateGraph(scrWidth, scrHeight);
 
-            List<Vertex<Point>> points = MakePoints(Start, End);
+            List<Vertex<Point>> points = MakePoints();
 
-            Path = Graph.Djikstra(Start, points[0]);
-
-            for (int i = 1; i < points.Count - 1; i++)
+            for (int i = 0; i < points.Count - 1; i++)
             {
                Path.AddRange(Graph.Djikstra(points[i], points[i + 1]));
             }
 
-            Path.AddRange(Graph.Djikstra(points[points.Count - 1], End));
-
             return Path;
         }
-        public List<Vertex<Point>> MakePoints(Vertex<Point> Start, Vertex<Point> End)
+        public List<Vertex<Point>> MakePoints()
         {
             Random rand = new Random();
 
             List<Vertex<Point>> points = new List<Vertex<Point>>();
 
-            int section1 = Graph.Count / 4;
+            int section1 = Graph.Count / 6;
             int section2 = section1 * 2;
             int section3 = section1 * 3;
-            int section4 = Graph.Count;
-
-            points.Add(Start);
+            int section4 = section1 * 4;
+            int section5 = section1 * 5;
+            int section6 = Graph.Count;
 
             points.Add(Graph[rand.Next(0, section1)]);
             points.Add(Graph[rand.Next(section1, section2)]);
             points.Add(Graph[rand.Next(section2, section3)]);
             points.Add(Graph[rand.Next(section3, section4)]);
-
-            points.Add(End);
+            points.Add(Graph[rand.Next(section4, section5)]);
+            points.Add(Graph[rand.Next(section5, section6)]);
 
             return points;
         }
         public void GenerateGraph(int scrWidth, int scrHeight)
         {
             Graph = new Graph<Point>();
-
-            int size = 15;
             
-            for (int x = 0; x < scrWidth; x+=size)
+            int size = 400;
+            
+            for (int x = 0; x < scrWidth; x +=size)
             {
-                for (int y = 0; y < scrHeight; y+= size)
+                for (int y = 0; y < scrHeight; y += size)
                 {
                     Vertex<Point> temp = new Vertex<Point>(new Point(x, y));
                     Graph.AddVertex(temp);
@@ -95,7 +79,7 @@ namespace TowerDefense
                         Vertex<Point> prevY = Graph.Search(new Point(x, y - size));
                         Graph.AddEdge(prevY, temp, 1);
                         Graph.AddEdge(temp, prevY, 1);
-                        //Fix Y not making proper neighbors
+                        
                     }
                 }
             }

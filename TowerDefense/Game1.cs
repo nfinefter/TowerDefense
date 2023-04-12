@@ -41,6 +41,8 @@ namespace TowerDefense
         int MapXBorder;
         Map map = new Map();
 
+        List<Vertex<Point>> path;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -62,7 +64,7 @@ namespace TowerDefense
 
             MapXBorder = GraphicsDevice.Viewport.Width - 250;
 
-            List<Vertex<Point>> path = map.GeneratePath(MapXBorder, GraphicsDevice.Viewport.Height);
+            path = map.GeneratePath(MapXBorder, GraphicsDevice.Viewport.Height);
 
             base.Initialize();
         }
@@ -167,7 +169,12 @@ namespace TowerDefense
             {
                 spriteBatch.DrawPoint(map.Graph[i].Value.X, map.Graph[i].Value.Y, Color.Black);
             }
-       
+
+            for (int i = 0; i < path.Count; i++)
+            {
+                spriteBatch.DrawRectangle();
+            }
+            
 
             spriteBatch.End();
 
