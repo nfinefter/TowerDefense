@@ -175,7 +175,7 @@ namespace TowerDefense
             for (int i = 0; i < path.Count; i++)
             {
                 //Fix next time to draw texture tiles
-                spriteBatch.DrawRectangle(new Rectangle(path[i].Value.X, path[i].Value.Y, MapXBorder / size, GraphicsDevice.Viewport.Height.size));
+                spriteBatch.DrawRectangle(new Rectangle(path[i].Value.X, path[i].Value.Y, MapXBorder / (int)size.X, GraphicsDevice.Viewport.Height / (int)size.Y), Color.White, 1, 0);
             }
             
 
