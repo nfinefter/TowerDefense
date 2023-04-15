@@ -13,7 +13,7 @@ namespace TowerDefense
 {
     public class Game1 : Game
     {
-        public static int size = 15;
+        public static int size = 50;
 
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
@@ -150,7 +150,7 @@ namespace TowerDefense
 
             for (int i = 0; i < bloons.Count; i++)
             {
-                bloons[i].Draw(spriteBatch);
+                spriteBatch.Draw(bloons[i].Tex, bloons[i].Pos, Color.Black);
             }
 
             spriteBatch.DrawString(spriteFont, $"{money}", new Vector2(moneyIMG.Pos.X + 50, moneyIMG.Pos.Y + 20), Color.Black);
@@ -175,7 +175,7 @@ namespace TowerDefense
             for (int i = 0; i < path.Count; i++)
             {
                 //Fix next time to draw texture tiles
-                spriteBatch.DrawRectangle(new Rectangle(path[i].Value.X, path[i].Value.Y, MapXBorder / (int)size.X, GraphicsDevice.Viewport.Height / (int)size.Y), Color.White, 1, 0);
+                spriteBatch.FillRectangle(new Rectangle(path[i].Value.X, path[i].Value.Y, 50, 50), Color.White, 0);
             }
             
 

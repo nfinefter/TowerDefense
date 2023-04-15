@@ -43,19 +43,16 @@ namespace TowerDefense
 
             List<Vertex<Point>> points = new List<Vertex<Point>>();
 
-            int section1 = Graph.Count / 6;
+            int section1 = Graph.Count / 4;
             int section2 = section1 * 2;
             int section3 = section1 * 3;
             int section4 = section1 * 4;
-            int section5 = section1 * 5;
-            int section6 = Graph.Count;
 
-            points.Add(Graph[rand.Next(0, section1)]);
+            points.Add(Graph[rand.Next(0, section1 / 2)]);
             points.Add(Graph[rand.Next(section1, section2)]);
             points.Add(Graph[rand.Next(section2, section3)]);
             points.Add(Graph[rand.Next(section3, section4)]);
-            points.Add(Graph[rand.Next(section4, section5)]);
-            points.Add(Graph[rand.Next(section5, section6)]);
+
 
             return points;
         }
@@ -64,9 +61,9 @@ namespace TowerDefense
             Graph = new Graph<Point>();
 
             
-            for (int x = 0; x < scrWidth; x +=size)
+            for (int x = 0; x+ size< scrWidth; x +=size)
             {
-                for (int y = 0; y < scrHeight; y += size)
+                for (int y = 0; y + size < scrHeight; y += size)
                 {
                     Vertex<Point> temp = new Vertex<Point>(new Point(x, y));
                     Graph.AddVertex(temp);
