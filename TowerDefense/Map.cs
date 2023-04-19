@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Drawing;
 
 using System;
 using System.Collections.Generic;
@@ -32,7 +32,7 @@ namespace TowerDefense
 
             for (int i = 0; i < points.Count - 1; i++)
             {
-               Path.AddRange(Graph.Djikstra(points[i], points[i + 1]));
+               PathFinding.AStar(out _, out Path, Graph, points[i].Value, points[i + 1].Value, PathFinding.Diagonal);
             }
 
             return Path;
@@ -52,7 +52,6 @@ namespace TowerDefense
             points.Add(Graph[rand.Next(section1, section2)]);
             points.Add(Graph[rand.Next(section2, section3)]);
             points.Add(Graph[rand.Next(section3, section4)]);
-
 
             return points;
         }

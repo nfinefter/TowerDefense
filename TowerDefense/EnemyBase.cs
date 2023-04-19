@@ -15,6 +15,8 @@ namespace TowerDefense
         public int Health;
         public int Speed;
         public int Difficulty;
+        public int LastUpdated = 0;
+        public int PathPosition = 0;
 
         protected EnemyBase(Texture2D tex, Rectangle pos, Color color, float rotation, Vector2 origin, int difficulty, int speed) 
             : base(tex, pos, color, rotation)

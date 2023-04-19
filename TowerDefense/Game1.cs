@@ -3,9 +3,11 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 using MonoGame.Extended;
+using MonoGame.Extended.Timers;
 
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 using WeightedDirectedGraphs;
 
@@ -13,7 +15,7 @@ namespace TowerDefense
 {
     public class Game1 : Game
     {
-        public static int size = 50;
+        public static int size = 40;
 
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
@@ -21,14 +23,15 @@ namespace TowerDefense
         SpriteBase healthIMG = default;
         List<Player> monkeys = new List<Player>();
         List<Enemy> bloons = new List<Enemy>();
-        List<Projectile> projectiles= new List<Projectile>();
+        List<Projectile> projectiles = new List<Projectile>();
         Texture2D monkeyImage;
         Texture2D bloonImage;
         List<Rectangle> MonkeySource;
         float money = 1000;
         int health = 100;
         SpriteFont spriteFont;
-
+        int pathDrawDelay = 0;
+        int pathIndex = 0;
         Rectangle sellButton;
         Rectangle upgradeButton;
 
@@ -43,24 +46,24 @@ namespace TowerDefense
         int MapXBorder;
         Map map = new Map();
 
-        List<Vertex<Point>> path;
+        int timer = 0;
+
+        List<Vertex<System.Drawing.Point>> path;
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            IsMouseVisible = true;            
+            IsMouseVisible = true;
         }
 
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
 
-           
-
             TargetElapsedTime = TimeSpan.FromMilliseconds(17);
 
-            graphics.PreferredBackBufferHeight= 980;
+            graphics.PreferredBackBufferHeight = 980;
             graphics.PreferredBackBufferWidth = 1900;
             graphics.ApplyChanges();
 
@@ -88,7 +91,10 @@ namespace TowerDefense
 
             monkeys.Add(new Player(monkeyImage, new Rectangle(GraphicsDevice.Viewport.Width - 200, 200, 100, 100), Color.White, 0, new Vector2(monkeyImage.Width / 2, monkeyImage.Height / 2), MonkeySource, 0, 0, 5));
 
-            bloons.Add(new Enemy(bloonImage, new Rectangle(20, 20, 20, 40), Color.White, 0, new Vector2(bloonImage.Width / 2, bloonImage.Height / 2), 0, 1));
+            bloons.Add(new Enemy(bloonImage, new Rectangle(new Microsoft.Xna.Framework.Point(path[0].Value.X, path[0].Value.Y), new Point(40, 40)), Color.Green, 0, new Vector2(bloonImage.Width / 2, bloonImage.Height / 2), 0, 50));
+            bloons.Add(new Enemy(bloonImage, new Rectangle(new Microsoft.Xna.Framework.Point(path[0].Value.X, path[0].Value.Y), new Point(40, 40)), Color.Yellow, 0, new Vector2(bloonImage.Width / 2, bloonImage.Height / 2), 0, 60));
+            bloons.Add(new Enemy(bloonImage, new Rectangle(new Microsoft.Xna.Framework.Point(path[0].Value.X, path[0].Value.Y), new Point(40, 40)), Color.Red, 0, new Vector2(bloonImage.Width / 2, bloonImage.Height / 2), 0, 70));
+            bloons.Add(new Enemy(bloonImage, new Rectangle(new Microsoft.Xna.Framework.Point(path[0].Value.X, path[0].Value.Y), new Point(40, 40)), Color.White, 0, new Vector2(bloonImage.Width / 2, bloonImage.Height / 2), 0, 100));
 
             sellButton = new Rectangle(moneyIMG.Pos.X + 10, GraphicsDevice.Viewport.Height - 60, 110, 50);
             upgradeButton = new Rectangle(sellButton.X + 120, GraphicsDevice.Viewport.Height - 60, 110, 50);
@@ -102,8 +108,6 @@ namespace TowerDefense
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-
-
             currState = Mouse.GetState().LeftButton;
 
             if (Vector2.Distance(new Vector2(monkeys[0].Pos.X, monkeys[0].Pos.Y), new Vector2(Mouse.GetState().Position.X, Mouse.GetState().Position.Y)) < 100 && Mouse.GetState().LeftButton == ButtonState.Pressed && prevState == ButtonState.Released)
@@ -113,11 +117,40 @@ namespace TowerDefense
             }
             if (Vector2.Distance(new Vector2(monkeys[monkeys.Count - 1].Pos.X, monkeys[monkeys.Count - 1].Pos.Y), new Vector2(Mouse.GetState().Position.X, Mouse.GetState().Position.Y)) < 20 && Mouse.GetState().LeftButton == ButtonState.Pressed)
             {
-                monkeys[monkeys.Count - 1].Pos = new Rectangle(Mouse.GetState().Position, new Point(monkeys[0].Pos.Width, monkeys[0].Pos.Height));
+                for (int i = 0; i < path.Count; i++)
+                {
+                    //Add red highlighting for whenever illegal monkey is trying to be placed
+                    if (monkeys[monkeys.Count - 1].Pos.Intersects(new Rectangle(path[i].Value.ToPoint(), new Point(size, size))))
+                    {
+                        monkeys[monkeys.Count - 1].Color = Color.Red;
+                    }
+                    else
+                    {
+                        monkeys[monkeys.Count - 1].Color = Color.White;
+                    }
+                    monkeys[monkeys.Count - 1].Pos = new Rectangle(Mouse.GetState().Position, new Point(monkeys[0].Pos.Width, monkeys[0].Pos.Height));
+
+                }
+               
             }
 
+            for (int i = 0; i < bloons.Count; i++)
+            {
+                if (timer - bloons[i].LastUpdated > bloons[i].Speed)
+                {
+                    bloons[i].LastUpdated = timer;
 
-            // TODO: Add your update logic here
+                    bloons[i].Pos = new Rectangle(path[bloons[i].PathPosition].Value.ToPoint(), bloons[i].Pos.Size);
+
+
+                    if (bloons[i].PathPosition < path.Count - 1)
+                    {
+                        bloons[i].PathPosition++;
+                    }
+                }
+            }
+
+            timer++;
 
             prevState = currState;
 
@@ -134,9 +167,21 @@ namespace TowerDefense
             }
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
+
+
             // TODO: Add your drawing code here
 
             spriteBatch.Begin();
+
+            for (int i = 0; i < pathDrawDelay; i++)
+            {
+                spriteBatch.FillRectangle(new Rectangle(path[i].Value.X, path[i].Value.Y, 50, 50), Color.White, 0);
+            }
+
+            if (pathDrawDelay < path.Count)
+            {
+                pathDrawDelay++;
+            }
 
             moneyIMG.Draw(spriteBatch);
 
@@ -150,7 +195,7 @@ namespace TowerDefense
 
             for (int i = 0; i < bloons.Count; i++)
             {
-                spriteBatch.Draw(bloons[i].Tex, bloons[i].Pos, Color.Black);
+                spriteBatch.Draw(bloons[i].Tex, bloons[i].Pos, bloons[i].Color);
             }
 
             spriteBatch.DrawString(spriteFont, $"{money}", new Vector2(moneyIMG.Pos.X + 50, moneyIMG.Pos.Y + 20), Color.Black);
@@ -159,7 +204,7 @@ namespace TowerDefense
 
             spriteBatch.FillRectangle(sellButton, Color.Red, 0);
             Vector2 size = spriteFont.MeasureString("Sell");
-            spriteBatch.DrawString(spriteFont, "Sell", new Vector2(sellButton.X + sellButton.Width / 2 - (size.X /2), sellButton.Y + sellButton.Height / 2 - (size.Y / 2)), Color.Black);
+            spriteBatch.DrawString(spriteFont, "Sell", new Vector2(sellButton.X + sellButton.Width / 2 - (size.X / 2), sellButton.Y + sellButton.Height / 2 - (size.Y / 2)), Color.Black);
 
             spriteBatch.FillRectangle(upgradeButton, Color.Green, 0);
             size = spriteFont.MeasureString("Upgrade");
@@ -172,12 +217,13 @@ namespace TowerDefense
                 spriteBatch.DrawPoint(map.Graph[i].Value.X, map.Graph[i].Value.Y, Color.Black);
             }
 
-            for (int i = 0; i < path.Count; i++)
-            {
-                //Fix next time to draw texture tiles
-                spriteBatch.FillRectangle(new Rectangle(path[i].Value.X, path[i].Value.Y, 50, 50), Color.White, 0);
-            }
-            
+            //for (int i = 0; i < path.Count; i++)
+            //{
+            //    Fix next time to draw texture tiles
+            //    spriteBatch.FillRectangle(new Rectangle(path[i].Value.X, path[i].Value.Y, 50, 50), Color.White, 0);
+            //}
+
+
 
             spriteBatch.End();
 
