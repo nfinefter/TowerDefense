@@ -34,11 +34,16 @@ namespace TowerDefense
         int pathIndex = 0;
         Rectangle sellButton;
         Rectangle upgradeButton;
+        bool boughtMonkey = false;
+        bool dragging = false;
+        int wrongPath = 0;
+        bool illegalPos = false;
 
         int updates = 0;
         int draws = 0;
         ButtonState prevState = ButtonState.Released;
         ButtonState currState;
+        Rectangle menuDimensions;
 
         int moneyHealthSizer = 50;
         int moneyHealthRightScreenBuffer = 250;
@@ -70,6 +75,8 @@ namespace TowerDefense
             MapXBorder = GraphicsDevice.Viewport.Width - 250;
 
             path = map.GeneratePath(MapXBorder, GraphicsDevice.Viewport.Height);
+
+            menuDimensions = new Rectangle(MapXBorder, 0, MapXBorder, GraphicsDevice.Viewport.Height);
 
             base.Initialize();
         }
@@ -110,29 +117,53 @@ namespace TowerDefense
 
             currState = Mouse.GetState().LeftButton;
 
-            if (Vector2.Distance(new Vector2(monkeys[0].Pos.X, monkeys[0].Pos.Y), new Vector2(Mouse.GetState().Position.X, Mouse.GetState().Position.Y)) < 100 && Mouse.GetState().LeftButton == ButtonState.Pressed && prevState == ButtonState.Released)
+            if (Vector2.Distance(new Vector2(monkeys[0].Pos.X, monkeys[0].Pos.Y), new Vector2(Mouse.GetState().Position.X, Mouse.GetState().Position.Y)) < 100 && Mouse.GetState().LeftButton == ButtonState.Pressed && prevState == ButtonState.Released && dragging == false)
             {
                 monkeys.Add(new Player(monkeyImage, monkeys[0].Pos, Color.White, 0, new Vector2(monkeyImage.Width / 2, monkeyImage.Height / 2), MonkeySource, 0, 0, 5));
                 money -= 100;
+
+                dragging = true;
+
+                if (Mouse.GetState().LeftButton != ButtonState.Pressed)
+                {
+                    dragging = false;
+                }                
             }
-            if (Vector2.Distance(new Vector2(monkeys[monkeys.Count - 1].Pos.X, monkeys[monkeys.Count - 1].Pos.Y), new Vector2(Mouse.GetState().Position.X, Mouse.GetState().Position.Y)) < 20 && Mouse.GetState().LeftButton == ButtonState.Pressed)
+
+            if (dragging)
             {
+                monkeys[monkeys.Count - 1].Pos = new Rectangle(Mouse.GetState().Position, new Point(monkeys[0].Pos.Width, monkeys[0].Pos.Height));
+            } 
+            if (Keyboard.GetState().IsKeyDown(Keys.Enter) && illegalPos == false)
+            {
+                dragging = false;
+            }
+
+            if (Vector2.Distance(new Vector2(monkeys[monkeys.Count - 1].Pos.X, monkeys[monkeys.Count - 1].Pos.Y), new Vector2(Mouse.GetState().Position.X, Mouse.GetState().Position.Y)) < 20)
+            {
+               
                 for (int i = 0; i < path.Count; i++)
                 {
                     //Add red highlighting for whenever illegal monkey is trying to be placed
-                    if (monkeys[monkeys.Count - 1].Pos.Intersects(new Rectangle(path[i].Value.ToPoint(), new Point(size, size))))
+                    
+                    if (monkeys[monkeys.Count - 1].Hitbox.Intersects(path[i].Hitbox()))
                     {
                         monkeys[monkeys.Count - 1].Color = Color.Red;
+                        wrongPath = i;
+                        illegalPos = true;
                     }
-                    else
+                    else if (!monkeys[monkeys.Count - 1].Hitbox.Intersects(path[wrongPath].Hitbox()))
                     {
                         monkeys[monkeys.Count - 1].Color = Color.White;
+                        illegalPos = false;
                     }
-                    monkeys[monkeys.Count - 1].Pos = new Rectangle(Mouse.GetState().Position, new Point(monkeys[0].Pos.Width, monkeys[0].Pos.Height));
-
                 }
-               
             }
+            if (monkeys[monkeys.Count - 1].Hitbox.Intersects(menuDimensions) || !monkeys[monkeys.Count - 1].Hitbox.Intersects(new Rectangle(0, 0, GraphicsDevice.Viewport.Width + Game1.size, GraphicsDevice.Viewport.Height + Game1.size)))
+            {
+                illegalPos = true;
+            }
+
 
             for (int i = 0; i < bloons.Count; i++)
             {
@@ -167,15 +198,13 @@ namespace TowerDefense
             }
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-
-
             // TODO: Add your drawing code here
 
             spriteBatch.Begin();
 
             for (int i = 0; i < pathDrawDelay; i++)
             {
-                spriteBatch.FillRectangle(new Rectangle(path[i].Value.X, path[i].Value.Y, 50, 50), Color.White, 0);
+                spriteBatch.FillRectangle(new Rectangle(path[i].Value.X, path[i].Value.Y, Game1.size, Game1.size), Color.White, 0);
             }
 
             if (pathDrawDelay < path.Count)
@@ -223,6 +252,8 @@ namespace TowerDefense
             //    spriteBatch.FillRectangle(new Rectangle(path[i].Value.X, path[i].Value.Y, 50, 50), Color.White, 0);
             //}
 
+            //Draws Hitboxes
+            spriteBatch.DrawRectangle(monkeys[monkeys.Count - 1].Hitbox, Color.Yellow, 1, 0);
 
 
             spriteBatch.End();

@@ -10,8 +10,9 @@ using WeightedDirectedGraphs;
 
 using static TowerDefense.Game1;
 
-namespace TowerDefense
-{
+namespace TowerDefense;
+
+
     public sealed class Map 
     {
         Vertex<Point> Start;
@@ -83,4 +84,4 @@ namespace TowerDefense
         }
 
     }
-}
+
