@@ -26,19 +26,18 @@ namespace TowerDefense
         List<Projectile> projectiles = new List<Projectile>();
         Texture2D monkeyImage;
         Texture2D bloonImage;
+        Texture2D dartImage;
         List<Rectangle> MonkeySource;
         float money = 1000;
         int health = 100;
         SpriteFont spriteFont;
         int pathDrawDelay = 0;
-        int pathIndex = 0;
         Rectangle sellButton;
         Rectangle upgradeButton;
-        bool boughtMonkey = false;
         bool dragging = false;
         int wrongPath = 0;
         bool illegalPos = false;
-
+        Player selectedMonkey;
         int updates = 0;
         int draws = 0;
         ButtonState prevState = ButtonState.Released;
@@ -87,7 +86,7 @@ namespace TowerDefense
 
             monkeyImage = Content.Load<Texture2D>("DartMnokeySpriteSheetEdited");
             bloonImage = Content.Load<Texture2D>("balloon");
-
+            dartImage = Content.Load<Texture2D>("Dart");
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             MonkeySource = SourceRectangleFinder(monkeyImage, new Point(6, 1));
@@ -105,6 +104,8 @@ namespace TowerDefense
 
             sellButton = new Rectangle(moneyIMG.Pos.X + 10, GraphicsDevice.Viewport.Height - 60, 110, 50);
             upgradeButton = new Rectangle(sellButton.X + 120, GraphicsDevice.Viewport.Height - 60, 110, 50);
+
+            selectedMonkey = monkeys[0];
 
             // TODO: use this.Content to load your game content here
         }
@@ -137,6 +138,7 @@ namespace TowerDefense
             if (Keyboard.GetState().IsKeyDown(Keys.Enter) && illegalPos == false)
             {
                 dragging = false;
+                monkeys[monkeys.Count - 1].Placed = true;
             }
 
             if (Vector2.Distance(new Vector2(monkeys[monkeys.Count - 1].Pos.X, monkeys[monkeys.Count - 1].Pos.Y), new Vector2(Mouse.GetState().Position.X, Mouse.GetState().Position.Y)) < 20)
@@ -159,11 +161,38 @@ namespace TowerDefense
                     }
                 }
             }
-            if (monkeys[monkeys.Count - 1].Hitbox.Intersects(menuDimensions) || !monkeys[monkeys.Count - 1].Hitbox.Intersects(new Rectangle(0, 0, GraphicsDevice.Viewport.Width + Game1.size, GraphicsDevice.Viewport.Height + Game1.size)))
+            if (monkeys[monkeys.Count - 1].Hitbox.Intersects(menuDimensions) || !new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height).Contains(monkeys[monkeys.Count - 1].Hitbox))
             {
+                monkeys[monkeys.Count - 1].Color = Color.Red;
                 illegalPos = true;
             }
+            for (int j = 0; j < monkeys.Count - 1; j++)
+            {
+                if (monkeys[monkeys.Count - 1].Hitbox.Intersects(monkeys[j].Hitbox))
+                {
+                    monkeys[monkeys.Count - 1].Color = Color.Red;
+                    illegalPos = true;
+                }
+            }
 
+            for (int i = 1; i < monkeys.Count; i++)
+            {
+                if (monkeys[i].Hitbox.Contains(Mouse.GetState().Position) && currState == ButtonState.Pressed)
+                {
+                    selectedMonkey = monkeys[i];  
+                }
+                
+            }
+            if (sellButton.Contains(Mouse.GetState().Position) && currState == ButtonState.Pressed && prevState == ButtonState.Released)
+            {
+                if (monkeys.Contains(selectedMonkey))
+                {
+                    monkeys.Remove(selectedMonkey);
+                    money += 100;
+                    selectedMonkey = monkeys[0];
+                }
+         
+            }
 
             for (int i = 0; i < bloons.Count; i++)
             {
@@ -178,8 +207,17 @@ namespace TowerDefense
                     {
                         bloons[i].PathPosition++;
                     }
+                    for (int j = 0; j < monkeys.Count; j++)
+                    {
+                        if (monkeys[j].Placed == true)
+                        {
+                            projectiles.Add(new Projectile(dartImage, new Rectangle(monkeys[j].Pos.X, monkeys[j].Pos.Y, 25, 50), Color.Black, 0, Vector2.Zero, monkeys[j].Damage, 5));
+                        }
+                    }
                 }
             }
+
+          
 
             timer++;
 
@@ -252,9 +290,15 @@ namespace TowerDefense
             //    spriteBatch.FillRectangle(new Rectangle(path[i].Value.X, path[i].Value.Y, 50, 50), Color.White, 0);
             //}
 
-            //Draws Hitboxes
-            spriteBatch.DrawRectangle(monkeys[monkeys.Count - 1].Hitbox, Color.Yellow, 1, 0);
+            //Draws All Projectiles
+            for (int i = 0; i < projectiles.Count; i++)
+            {
+                projectiles[i].Draw(spriteBatch);
+            }
 
+            //Draws Hitboxes
+            //spriteBatch.DrawRectangle(monkeys[monkeys.Count - 1].Hitbox, Color.Yellow, 1, 0);
+            spriteBatch.DrawRectangle(selectedMonkey.Hitbox, Color.Black, 1, 0);
 
             spriteBatch.End();
 

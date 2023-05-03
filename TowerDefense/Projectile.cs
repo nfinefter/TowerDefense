@@ -11,13 +11,17 @@ namespace TowerDefense
 {
     public sealed class Projectile : ProjectileBase
     {
-        public override Rectangle? SourceRectangle => throw new NotImplementedException();
+        private Rectangle? sourceRectangle = null;
 
-        public override Vector2 Origin => throw new NotImplementedException();
+        public override Rectangle? SourceRectangle => sourceRectangle;
+
+        private Vector2 origin;
+        public override Vector2 Origin => origin;
 
         public Projectile(Texture2D tex, Rectangle pos, Color color, float rotation, Vector2 origin, int damage, int speed)
             : base(tex, pos, color, rotation, origin, damage, speed)
         {
+            this.origin = origin;
         }
 
         public override void Update()
