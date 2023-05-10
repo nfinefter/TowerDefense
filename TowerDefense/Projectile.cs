@@ -18,15 +18,15 @@ namespace TowerDefense
         private Vector2 origin;
         public override Vector2 Origin => origin;
 
-        public Projectile(Texture2D tex, Rectangle pos, Color color, float rotation, Vector2 origin, int damage, int speed)
-            : base(tex, pos, color, rotation, origin, damage, speed)
+        public Projectile(Texture2D tex, Rectangle pos, Color color, float rotation, Vector2 origin, int damage, double speed, Player thrownFrom)
+            : base(tex, pos, color, rotation, origin, damage, speed, thrownFrom)
         {
             this.origin = origin;
         }
 
         public override void Update()
         {
-               //Do dart projectile stuff trig         
+            //Do dart projectile stuff trig         
         }
 
     }

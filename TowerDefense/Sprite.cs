@@ -22,7 +22,7 @@ namespace TowerDefense
 
         public override Rectangle? SourceRectangle => null;
 
-        public override void Update()
+        public override void Update(GameTime time)
         {
             throw new NotImplementedException();
         }

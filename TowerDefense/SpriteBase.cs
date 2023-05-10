@@ -32,6 +32,11 @@ namespace TowerDefense
         }
 
         public abstract void Update();
+
+        public void Lerp(Point initialPos, Point finalPos, double scale)
+        {
+            Pos.Location = new Point((int)((1 - scale) * initialPos.X + scale * finalPos.X), (int)((1 - scale) * initialPos.Y + scale * finalPos.Y));
+        }
         
     }
 }

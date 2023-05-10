@@ -97,10 +97,10 @@ namespace TowerDefense
 
             monkeys.Add(new Player(monkeyImage, new Rectangle(GraphicsDevice.Viewport.Width - 200, 200, 100, 100), Color.White, 0, new Vector2(monkeyImage.Width / 2, monkeyImage.Height / 2), MonkeySource, 0, 0, 5));
 
-            bloons.Add(new Enemy(bloonImage, new Rectangle(new Microsoft.Xna.Framework.Point(path[0].Value.X, path[0].Value.Y), new Point(40, 40)), Color.Green, 0, new Vector2(bloonImage.Width / 2, bloonImage.Height / 2), 0, 50));
-            bloons.Add(new Enemy(bloonImage, new Rectangle(new Microsoft.Xna.Framework.Point(path[0].Value.X, path[0].Value.Y), new Point(40, 40)), Color.Yellow, 0, new Vector2(bloonImage.Width / 2, bloonImage.Height / 2), 0, 60));
-            bloons.Add(new Enemy(bloonImage, new Rectangle(new Microsoft.Xna.Framework.Point(path[0].Value.X, path[0].Value.Y), new Point(40, 40)), Color.Red, 0, new Vector2(bloonImage.Width / 2, bloonImage.Height / 2), 0, 70));
-            bloons.Add(new Enemy(bloonImage, new Rectangle(new Microsoft.Xna.Framework.Point(path[0].Value.X, path[0].Value.Y), new Point(40, 40)), Color.White, 0, new Vector2(bloonImage.Width / 2, bloonImage.Height / 2), 0, 100));
+            bloons.Add(new Enemy(bloonImage, new Rectangle(new Microsoft.Xna.Framework.Point(path[0].Value.X, path[0].Value.Y), new Point(40, 40)), Color.Green, 0, new Vector2(bloonImage.Width / 2, bloonImage.Height / 2), 0, 50, path));
+            bloons.Add(new Enemy(bloonImage, new Rectangle(new Microsoft.Xna.Framework.Point(path[0].Value.X, path[0].Value.Y), new Point(40, 40)), Color.Yellow, 0, new Vector2(bloonImage.Width / 2, bloonImage.Height / 2), 0, 60, path));
+            bloons.Add(new Enemy(bloonImage, new Rectangle(new Microsoft.Xna.Framework.Point(path[0].Value.X, path[0].Value.Y), new Point(40, 40)), Color.Red, 0, new Vector2(bloonImage.Width / 2, bloonImage.Height / 2), 0, 70, path));
+            bloons.Add(new Enemy(bloonImage, new Rectangle(new Microsoft.Xna.Framework.Point(path[0].Value.X, path[0].Value.Y), new Point(40, 40)), Color.White, 0, new Vector2(bloonImage.Width / 2, bloonImage.Height / 2), 0, 100, path));
 
             sellButton = new Rectangle(moneyIMG.Pos.X + 10, GraphicsDevice.Viewport.Height - 60, 110, 50);
             upgradeButton = new Rectangle(sellButton.X + 120, GraphicsDevice.Viewport.Height - 60, 110, 50);
@@ -128,13 +128,13 @@ namespace TowerDefense
                 if (Mouse.GetState().LeftButton != ButtonState.Pressed)
                 {
                     dragging = false;
-                }                
+                }
             }
 
             if (dragging)
             {
                 monkeys[monkeys.Count - 1].Pos = new Rectangle(Mouse.GetState().Position, new Point(monkeys[0].Pos.Width, monkeys[0].Pos.Height));
-            } 
+            }
             if (Keyboard.GetState().IsKeyDown(Keys.Enter) && illegalPos == false)
             {
                 dragging = false;
@@ -143,11 +143,11 @@ namespace TowerDefense
 
             if (Vector2.Distance(new Vector2(monkeys[monkeys.Count - 1].Pos.X, monkeys[monkeys.Count - 1].Pos.Y), new Vector2(Mouse.GetState().Position.X, Mouse.GetState().Position.Y)) < 20)
             {
-               
+
                 for (int i = 0; i < path.Count; i++)
                 {
                     //Add red highlighting for whenever illegal monkey is trying to be placed
-                    
+
                     if (monkeys[monkeys.Count - 1].Hitbox.Intersects(path[i].Hitbox()))
                     {
                         monkeys[monkeys.Count - 1].Color = Color.Red;
@@ -179,9 +179,9 @@ namespace TowerDefense
             {
                 if (monkeys[i].Hitbox.Contains(Mouse.GetState().Position) && currState == ButtonState.Pressed)
                 {
-                    selectedMonkey = monkeys[i];  
+                    selectedMonkey = monkeys[i];
                 }
-                
+
             }
             if (sellButton.Contains(Mouse.GetState().Position) && currState == ButtonState.Pressed && prevState == ButtonState.Released)
             {
@@ -191,35 +191,56 @@ namespace TowerDefense
                     money += 100;
                     selectedMonkey = monkeys[0];
                 }
-         
+
             }
 
             for (int i = 0; i < bloons.Count; i++)
             {
-                if (timer - bloons[i].LastUpdated > bloons[i].Speed)
-                {
-                    bloons[i].LastUpdated = timer;
+                bloons[i].Update();
 
-                    bloons[i].Pos = new Rectangle(path[bloons[i].PathPosition].Value.ToPoint(), bloons[i].Pos.Size);
+                //if (timer - bloons[i].LastUpdated > bloons[i].Speed)
+                //{
+                //    bloons[i].LastUpdated = timer;
+
+                //    bloons[i].Pos = new Rectangle(path[bloons[i].PathPosition].Value.ToPoint(), bloons[i].Pos.Size);
 
 
-                    if (bloons[i].PathPosition < path.Count - 1)
-                    {
-                        bloons[i].PathPosition++;
-                    }
-                    for (int j = 0; j < monkeys.Count; j++)
-                    {
-                        if (monkeys[j].Placed == true)
-                        {
-                            projectiles.Add(new Projectile(dartImage, new Rectangle(monkeys[j].Pos.X, monkeys[j].Pos.Y, 25, 50), Color.Black, 0, Vector2.Zero, monkeys[j].Damage, 5));
-                        }
-                    }
-                }
+                //    if (bloons[i].PathPosition < path.Count - 1)
+                //    {
+                //        bloons[i].PathPosition++;
+                //    }
+                //}
             }
+            //for (int j = 0; j < monkeys.Count; j++)
+            //{
+
+            //    if (monkeys[j].Placed == true)
+            //    {
+            //        if (projectiles.Count > 1)
+            //        {
+            //            projectiles.RemoveAt(projectiles.Count - 1);
+            //        }
+            //        double speed = Projectile.FindSpeed(monkeys[j].Pos.Location.ToVector2(), bloons[i].Pos.Location.ToVector2(), 20);
+            //        projectiles.Add(new Projectile(dartImage, new Rectangle(monkeys[j].Pos.X, monkeys[j].Pos.Y, 25, 50), Color.Black, 0, Vector2.Zero, monkeys[j].Damage, speed, monkeys[j]));
+            //        for (int k = 0; k < projectiles.Count; k++)
+            //        {
+            //            projectiles[k].Lerp(projectiles[k].ThrownFrom.Pos.Location, bloons[i].Pos.Location, projectiles[k].Scalar);
+            //            for (int a = 0; a < bloons.Count; a++)
+            //            {
+            //                if (projectiles[k].Pos.Intersects(bloons[a].Pos))
+            //                {
+            //                    projectiles.RemoveAt(k);
+            //                    bloons.RemoveAt(a);
+            //                }
+            //            }
+
+            //        }
+            //    }
+            //}
+
+
 
           
-
-            timer++;
 
             prevState = currState;
 

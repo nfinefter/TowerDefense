@@ -23,7 +23,7 @@ namespace TowerDefense
             //SourceRectangles = sourceRectangle;
         }
                 
-        public override void Update()
+        public override void Update(GameTime time)
         {
             if (test < TimeSpan.FromMilliseconds(1000)) return;
             test = TimeSpan.Zero;
