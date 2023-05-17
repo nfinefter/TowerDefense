@@ -31,4 +31,10 @@
     <Message Text="Restoring dotnet tools" Importance="High" />
     <Exec Command="dotnet tool restore" />
   </Target>
+  <ItemGroup>
+    <EditorConfigFiles Remove="C:\Users\nicholas.finefter\Source\Repos\nfinefter\TowerDefense\TowerDefense\.editorconfig" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="C:\Users\nicholas.finefter\Source\Repos\nfinefter\TowerDefense\TowerDefense\.editorconfig" />
+  </ItemGroup>
 </Project>

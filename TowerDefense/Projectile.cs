@@ -24,10 +24,9 @@ namespace TowerDefense
             this.origin = origin;
         }
 
-        public override void Update()
+        public override void Update(GameTime gameTime)
         {
-            //Do dart projectile stuff trig         
+            throw new NotImplementedException();
         }
-
     }
 }

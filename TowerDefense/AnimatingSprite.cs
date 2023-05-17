@@ -24,5 +24,7 @@ namespace TowerDefense
 
             this.origin = origin;
         }
+
+       
     }
 }

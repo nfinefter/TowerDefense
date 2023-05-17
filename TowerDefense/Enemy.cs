@@ -7,12 +7,16 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 using WeightedDirectedGraphs;
 
 namespace TowerDefense
 {
     sealed class Enemy : EnemyBase
     {
+        TimeSpan moveTime = TimeSpan.FromSeconds(1);
+        TimeSpan moveWait;
+
         private int dmgTaken;
 
         List<Vertex<System.Drawing.Point>> Path;
@@ -34,7 +38,7 @@ namespace TowerDefense
             dmgTaken = dmg;
         }
 
-        public override void Update()
+        public override void Update(GameTime time)
         {
             //Do health stuff
 
@@ -45,12 +49,20 @@ namespace TowerDefense
             //    Difficulty--;
             //}
 
-            Pos = new Rectangle(Path[PathPosition].Value.ToPoint(), Pos.Size);
+            TimeSpan speed = TimeSpan.FromMilliseconds(Speed);
 
+            moveWait += time.ElapsedGameTime;
 
-            if (PathPosition < Path.Count - 1)
+            if (moveWait > moveTime - speed)
             {
-                PathPosition++;
+                Pos = new Rectangle(Path[PathPosition].Value.ToPoint(), Pos.Size);
+
+                if (PathPosition < Path.Count - 1)
+                {
+                    PathPosition++;
+                }
+
+                moveWait = TimeSpan.Zero;
             }
 
         }

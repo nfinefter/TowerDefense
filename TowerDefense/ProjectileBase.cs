@@ -13,7 +13,6 @@ namespace TowerDefense
 {
     public abstract class ProjectileBase : SpriteBase
     {
-
         public int Damage;
         private double Speed;
 

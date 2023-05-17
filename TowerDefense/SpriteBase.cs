@@ -31,7 +31,7 @@ namespace TowerDefense
             spriteBatch.Draw(Tex, Pos, SourceRectangle, Color, Rotation, Origin, SpriteEffects.None, 0);
         }
 
-        public abstract void Update();
+        public abstract void Update(GameTime gameTime);
 
         public void Lerp(Point initialPos, Point finalPos, double scale)
         {
