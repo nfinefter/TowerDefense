@@ -15,8 +15,6 @@ namespace TowerDefense;
 
     public sealed class Map 
     {
-        Vertex<Point> Start;
-        Vertex<Point> End;
         List<Vertex<Point>> Path = new List<Vertex<Point>>();
         public Graph<Point> Graph;
 

@@ -12,7 +12,7 @@ using WeightedDirectedGraphs;
 
 namespace TowerDefense
 {
-    sealed class Enemy : EnemyBase
+    public sealed class Enemy : EnemyBase
     {
         TimeSpan moveTime = TimeSpan.FromSeconds(1);
         TimeSpan moveWait;

@@ -34,7 +34,7 @@ namespace TowerDefense
             ThrownFrom = thrownFrom;
         }
 
-        public static double FindSpeed(Vector2 pos1, Vector2 pos2, double idealSpeed)
+        public static double FindingTime(Vector2 pos1, Vector2 pos2, double idealSpeed)
         {
             return idealSpeed / Vector2.Distance(pos1, pos2);
         }

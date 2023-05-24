@@ -53,8 +53,6 @@ namespace TowerDefense
         int MapXBorder;
         Map map = new Map();
 
-        int timer = 0;
-
         List<Vertex<System.Drawing.Point>> path;
 
         public Game1()
@@ -105,10 +103,10 @@ namespace TowerDefense
 
             monkeys.Add(new Player(monkeyImage, new Rectangle(GraphicsDevice.Viewport.Width - 200, 200, 100, 100), Color.White, 0, new Vector2(monkeyImage.Width / 2, monkeyImage.Height / 2), MonkeySource, 0, 0, 5, 25));
 
-            bloons.Add(new Enemy(bloonImage, new Rectangle(new Microsoft.Xna.Framework.Point(path[0].Value.X, path[0].Value.Y), new Point(40, 40)), Color.Green, 0, new Vector2(bloonImage.Width / 2, bloonImage.Height / 2), 0, 500, path));
-            bloons.Add(new Enemy(bloonImage, new Rectangle(new Microsoft.Xna.Framework.Point(path[0].Value.X, path[0].Value.Y), new Point(40, 40)), Color.Yellow, 0, new Vector2(bloonImage.Width / 2, bloonImage.Height / 2), 0, 600, path));
-            bloons.Add(new Enemy(bloonImage, new Rectangle(new Microsoft.Xna.Framework.Point(path[0].Value.X, path[0].Value.Y), new Point(40, 40)), Color.Red, 0, new Vector2(bloonImage.Width / 2, bloonImage.Height / 2), 0, 700, path));
-            bloons.Add(new Enemy(bloonImage, new Rectangle(new Microsoft.Xna.Framework.Point(path[0].Value.X, path[0].Value.Y), new Point(40, 40)), Color.White, 0, new Vector2(bloonImage.Width / 2, bloonImage.Height / 2), 0, 800, path));
+            bloons.Add(new Enemy(bloonImage, new Rectangle(new Microsoft.Xna.Framework.Point(path[0].Value.X, path[0].Value.Y), new Point(40, 40)), Color.Green, 0, new Vector2(bloonImage.Width / 2, bloonImage.Height / 2), 0, 500, path, 5));
+            bloons.Add(new Enemy(bloonImage, new Rectangle(new Microsoft.Xna.Framework.Point(path[0].Value.X, path[0].Value.Y), new Point(40, 40)), Color.Yellow, 0, new Vector2(bloonImage.Width / 2, bloonImage.Height / 2), 0, 600, path, 3));
+            bloons.Add(new Enemy(bloonImage, new Rectangle(new Microsoft.Xna.Framework.Point(path[0].Value.X, path[0].Value.Y), new Point(40, 40)), Color.Red, 0, new Vector2(bloonImage.Width / 2, bloonImage.Height / 2), 0, 700, path, 2));
+            bloons.Add(new Enemy(bloonImage, new Rectangle(new Microsoft.Xna.Framework.Point(path[0].Value.X, path[0].Value.Y), new Point(40, 40)), Color.White, 0, new Vector2(bloonImage.Width / 2, bloonImage.Height / 2), 0, 800, path, 1));
 
             sellButton = new Rectangle(moneyIMG.Pos.X + 10, GraphicsDevice.Viewport.Height - 60, 110, 50);
             upgradeButton = new Rectangle(sellButton.X + 120, GraphicsDevice.Viewport.Height - 60, 110, 50);
@@ -218,7 +216,13 @@ namespace TowerDefense
                 //    }
                 //}
             }
-
+            for (int i = 1; i < monkeys.Count; i++)
+            {
+                monkeys[i].FindTarget(bloons);
+                monkeys[i].Update(gameTime);
+            }
+            Player.CheckKill(ref bloons);
+            
 
             //for (int j = 0; j < monkeys.Count; j++)
             //{
@@ -321,9 +325,9 @@ namespace TowerDefense
             //}
 
             //Draws All Projectiles
-            for (int i = 0; i < projectiles.Count; i++)
+            for (int i = 0; i < Player.projectiles.Count; i++)
             {
-                projectiles[i].Draw(spriteBatch);
+                Player.projectiles[i].Draw(spriteBatch);
             }
 
             //Draws Hitboxes
