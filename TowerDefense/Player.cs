@@ -1,10 +1,9 @@
-﻿using Assimp.Configs;
-
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -52,11 +51,15 @@ namespace TowerDefense
             }
             for (int i = 0; i < projectiles.Count; i++)
             {
-                double yLength = Math.Sin(projectiles[i].Rotation) * 20;
-                double xLength = Math.Cos(projectiles[i].Rotation) * 20;
+                if (projectiles[i].ThrownFrom == this)
+                {
 
-                projectiles[i].Pos.X += (int)yLength;
-                projectiles[i].Pos.Y += (int)xLength;
+                    double yLength = Math.Sin(projectiles[i].Rotation) * 20;
+                    double xLength = Math.Cos(projectiles[i].Rotation) * 20;
+
+                    projectiles[i].Pos.X += (int)yLength;
+                    projectiles[i].Pos.Y += (int)xLength;
+                }
             }
             //dart throwing works just fix visual rotation and add bloon health instead of one shotting.
         }
@@ -104,12 +107,24 @@ namespace TowerDefense
                 {
                     if (projectiles[i].Pos.Intersects(enemies[j].Pos))
                     {
+                        projectiles[i].DamageCalc();
+
+                        Game1.money += ((float)enemies[j].Rank/ 10f);
+
+                        enemies[j].Rank--;
+
+                        RankCheck(enemies[j]);
+
                         projectiles.RemoveAt(i);
-                        enemies.RemoveAt(j);
-                        //enemies[j].Health -= projectiles[i].Damage;
-                        //Work on bloons losing health
+
+                        if (enemies[j].Rank <= 0)
+                        {
+                            enemies.RemoveAt(j);
+                        }
+                        
                         break;
                     }
+                
                 }
             }
         }

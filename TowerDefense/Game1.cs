@@ -31,8 +31,8 @@ namespace TowerDefense
         Texture2D bloonImage;
         public static Texture2D dartImage;
         List<Rectangle> MonkeySource;
-        float money = 1000;
-        int health = 100;
+        static public float money = 1000;
+        static public int health = 100;
         SpriteFont spriteFont;
         int pathDrawDelay = 0;
         Rectangle sellButton;
@@ -47,13 +47,15 @@ namespace TowerDefense
         ButtonState currState;
         Rectangle menuDimensions;
 
+        public static Rectangle Start;
+
         int moneyHealthSizer = 50;
         int moneyHealthRightScreenBuffer = 250;
 
         int MapXBorder;
         Map map = new Map();
 
-        List<Vertex<System.Drawing.Point>> path;
+        public static List<Vertex<System.Drawing.Point>> path;
 
         public Game1()
         {
@@ -77,6 +79,8 @@ namespace TowerDefense
             path = map.GeneratePath(MapXBorder, GraphicsDevice.Viewport.Height);
 
             menuDimensions = new Rectangle(MapXBorder, 0, MapXBorder, GraphicsDevice.Viewport.Height);
+
+            Start = new Rectangle(new Microsoft.Xna.Framework.Point(path[0].Value.X, path[0].Value.Y), new Point(40, 40));
 
             base.Initialize();
         }
@@ -103,10 +107,10 @@ namespace TowerDefense
 
             monkeys.Add(new Player(monkeyImage, new Rectangle(GraphicsDevice.Viewport.Width - 200, 200, 100, 100), Color.White, 0, new Vector2(monkeyImage.Width / 2, monkeyImage.Height / 2), MonkeySource, 0, 0, 5, 25));
 
-            bloons.Add(new Enemy(bloonImage, new Rectangle(new Microsoft.Xna.Framework.Point(path[0].Value.X, path[0].Value.Y), new Point(40, 40)), Color.Green, 0, new Vector2(bloonImage.Width / 2, bloonImage.Height / 2), 0, 500, path, 5));
-            bloons.Add(new Enemy(bloonImage, new Rectangle(new Microsoft.Xna.Framework.Point(path[0].Value.X, path[0].Value.Y), new Point(40, 40)), Color.Yellow, 0, new Vector2(bloonImage.Width / 2, bloonImage.Height / 2), 0, 600, path, 3));
-            bloons.Add(new Enemy(bloonImage, new Rectangle(new Microsoft.Xna.Framework.Point(path[0].Value.X, path[0].Value.Y), new Point(40, 40)), Color.Red, 0, new Vector2(bloonImage.Width / 2, bloonImage.Height / 2), 0, 700, path, 2));
-            bloons.Add(new Enemy(bloonImage, new Rectangle(new Microsoft.Xna.Framework.Point(path[0].Value.X, path[0].Value.Y), new Point(40, 40)), Color.White, 0, new Vector2(bloonImage.Width / 2, bloonImage.Height / 2), 0, 800, path, 1));
+            bloons.Add(new Enemy(bloonImage, Start, Color.Red, 0, new Vector2(bloonImage.Width / 2, bloonImage.Height / 2), 0, path, 5));
+            bloons.Add(new Enemy(bloonImage, Start, Color.Red, 0, new Vector2(bloonImage.Width / 2, bloonImage.Height / 2), 0, path, 3));
+            bloons.Add(new Enemy(bloonImage, Start, Color.Red, 0, new Vector2(bloonImage.Width / 2, bloonImage.Height / 2), 0, path, 2));
+            bloons.Add(new Enemy(bloonImage, Start, Color.Red, 0, new Vector2(bloonImage.Width / 2, bloonImage.Height / 2), 0, path, 1));
 
             sellButton = new Rectangle(moneyIMG.Pos.X + 10, GraphicsDevice.Viewport.Height - 60, 110, 50);
             upgradeButton = new Rectangle(sellButton.X + 120, GraphicsDevice.Viewport.Height - 60, 110, 50);
@@ -124,7 +128,7 @@ namespace TowerDefense
 
             currState = Mouse.GetState().LeftButton;
 
-            if (Vector2.Distance(new Vector2(monkeys[0].Pos.X, monkeys[0].Pos.Y), new Vector2(Mouse.GetState().Position.X, Mouse.GetState().Position.Y)) < 100 && Mouse.GetState().LeftButton == ButtonState.Pressed && prevState == ButtonState.Released && dragging == false)
+            if (Vector2.Distance(new Vector2(monkeys[0].Pos.X, monkeys[0].Pos.Y), new Vector2(Mouse.GetState().Position.X, Mouse.GetState().Position.Y)) < 100 && Mouse.GetState().LeftButton == ButtonState.Pressed && prevState == ButtonState.Released && dragging == false && money >= 100)
             {
                 monkeys.Add(new Player(monkeyImage, monkeys[0].Pos, Color.White, 0, new Vector2(monkeyImage.Width / 2, monkeyImage.Height / 2), MonkeySource, 0, 0, 5, 25));
                 money -= 100;
@@ -191,11 +195,19 @@ namespace TowerDefense
             }
             if (sellButton.Contains(Mouse.GetState().Position) && currState == ButtonState.Pressed && prevState == ButtonState.Released)
             {
-                if (monkeys.Contains(selectedMonkey))
+                if (monkeys.Contains(selectedMonkey) && monkeys.Count > 0)
                 {
                     monkeys.Remove(selectedMonkey);
                     money += 100;
                     selectedMonkey = monkeys[0];
+                }
+            }
+            if (upgradeButton.Contains(Mouse.GetState().Position) && currState == ButtonState.Pressed && prevState == ButtonState.Released && money >= 100)
+            {
+                if (monkeys.Contains(selectedMonkey) && monkeys.Count > 0)
+                {
+                    selectedMonkey.DmgMultiplier++;
+                    money -= 100;
                 }
             }
 
@@ -222,38 +234,16 @@ namespace TowerDefense
                 monkeys[i].Update(gameTime);
             }
             Player.CheckKill(ref bloons);
-            
 
-            //for (int j = 0; j < monkeys.Count; j++)
-            //{
+            for (int i = 0; i < bloons.Count; i++)
+            {
+                if (IsAttacked(bloons[i]))
+                {
+                    bloons.RemoveAt(i);
+                }
+            }
 
-            //    if (monkeys[j].Placed == true)
-            //    {
-            //        if (projectiles.Count > 1)
-            //        {
-            //            projectiles.RemoveAt(projectiles.Count - 1);
-            //        }
-            //        double speed = Projectile.FindSpeed(monkeys[j].Pos.Location.ToVector2(), bloons[i].Pos.Location.ToVector2(), 20);
-            //        projectiles.Add(new Projectile(dartImage, new Rectangle(monkeys[j].Pos.X, monkeys[j].Pos.Y, 25, 50), Color.Black, 0, Vector2.Zero, monkeys[j].Damage, speed, monkeys[j]));
-            //        for (int k = 0; k < projectiles.Count; k++)
-            //        {
-            //            projectiles[k].Lerp(projectiles[k].ThrownFrom.Pos.Location, bloons[i].Pos.Location, projectiles[k].Scalar);
-            //            for (int a = 0; a < bloons.Count; a++)
-            //            {
-            //                if (projectiles[k].Pos.Intersects(bloons[a].Pos))
-            //                {
-            //                    projectiles.RemoveAt(k);
-            //                    bloons.RemoveAt(a);
-            //                }
-            //            }
-
-            //        }
-            //    }
-            //}
-
-
-
-          
+            EnemyCreate(gameTime, ref bloons);
 
             prevState = currState;
 

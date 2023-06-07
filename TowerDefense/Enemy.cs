@@ -17,37 +17,23 @@ namespace TowerDefense
         TimeSpan moveTime = TimeSpan.FromSeconds(1);
         TimeSpan moveWait;
 
-        private int dmgTaken;
-
-        List<Vertex<System.Drawing.Point>> Path;
+        public List<Vertex<System.Drawing.Point>> Path;
         public override Rectangle? SourceRectangle => null;
 
         private Vector2 origin;
 
         public override Vector2 Origin => origin;
 
-        public Enemy(Texture2D tex, Rectangle pos, Color color, float rotation, Vector2 origin, int difficulty, int speed, List<Vertex<System.Drawing.Point>> path)
-            : base(tex, pos, color, rotation, origin, difficulty, speed)
+        public Enemy(Texture2D tex, Rectangle pos, Color color, float rotation, Vector2 origin, int difficulty, List<Vertex<System.Drawing.Point>> path, int rank)
+            : base(tex, pos, color, rotation, origin, difficulty, rank)
         {
             this.origin = origin;
             Path = path;
-        }
-
-        public void Attacked(int dmg)
-        {
-            dmgTaken = dmg;
+            RankCheck(this);
         }
 
         public override void Update(GameTime time)
         {
-            //Do health stuff
-
-            //Health -= dmgTaken;
-
-            //if (MaxHealth % Health >= 10)
-            //{
-            //    Difficulty--;
-            //}
 
             TimeSpan speed = TimeSpan.FromMilliseconds(Speed);
 
@@ -65,7 +51,9 @@ namespace TowerDefense
                 moveWait = TimeSpan.Zero;
             }
 
+            
         }
+        
 
     }
 }

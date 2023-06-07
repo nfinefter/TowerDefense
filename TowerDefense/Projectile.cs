@@ -26,7 +26,12 @@ namespace TowerDefense
 
         public override void Update(GameTime gameTime)
         {
-            throw new NotImplementedException();
+            throw new Exception();
+        }
+
+        public void DamageCalc()
+        {
+            Damage = ThrownFrom.DmgMultiplier * 5;
         }
     }
 }
