@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace TowerDefense
 {
-    public class EnemyManager
+    public static class EnemyManager
     {
-        public bool IsAttacked(Enemy enemy)
+        public static bool IsAttacked(Enemy enemy)
         {
             if (enemy.PathPosition + 1 == enemy.Path.Count)
             {
@@ -19,7 +19,7 @@ namespace TowerDefense
             }
             return false;
         }
-        public void RankCheck(Enemy enemy)
+        public static void RankCheck(Enemy enemy)
         {
             if (enemy.Rank == 1)
             {
@@ -52,13 +52,13 @@ namespace TowerDefense
                 enemy.Speed = 600;
             }
         }
-        TimeSpan moveTime = TimeSpan.FromSeconds(1);
-        TimeSpan moveWait;
-        int min = 1;
-        int max = 10;
-        int minRank = 1;
+        static TimeSpan moveTime = TimeSpan.FromSeconds(1);
+        static TimeSpan moveWait;
+        static int min = 1;
+        static int max = 10;
+        static int minRank = 1;
 
-        public void EnemyCreate(GameTime time, ref List<Enemy> bloons)
+        public static void EnemyCreate(GameTime time, ref List<Enemy> bloons)
         {
             Random rand = new Random();
 

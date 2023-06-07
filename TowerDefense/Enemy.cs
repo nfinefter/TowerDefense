@@ -29,7 +29,7 @@ namespace TowerDefense
         {
             this.origin = origin;
             Path = path;
-            RankCheck(this);
+            EnemyManager.RankCheck(this);
         }
 
         public override void Update(GameTime time)

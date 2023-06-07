@@ -46,6 +46,7 @@ namespace TowerDefense
         ButtonState prevState = ButtonState.Released;
         ButtonState currState;
         Rectangle menuDimensions;
+        Sprite Dot;
 
         public static Rectangle Start;
 
@@ -133,6 +134,8 @@ namespace TowerDefense
                 monkeys.Add(new Player(monkeyImage, monkeys[0].Pos, Color.White, 0, new Vector2(monkeyImage.Width / 2, monkeyImage.Height / 2), MonkeySource, 0, 0, 5, 25));
                 money -= 100;
 
+                selectedMonkey.CreateDot();
+
                 dragging = true;
 
                 if (Mouse.GetState().LeftButton != ButtonState.Pressed)
@@ -204,10 +207,12 @@ namespace TowerDefense
             }
             if (upgradeButton.Contains(Mouse.GetState().Position) && currState == ButtonState.Pressed && prevState == ButtonState.Released && money >= 100)
             {
-                if (monkeys.Contains(selectedMonkey) && monkeys.Count > 0)
+                if (monkeys.Contains(selectedMonkey) && monkeys.Count > 0 && selectedMonkey.Level < 6)
                 {
                     selectedMonkey.DmgMultiplier++;
                     money -= 100;
+                    selectedMonkey.Level++;
+                    PlayerManager.UpgradeDot(selectedMonkey);
                 }
             }
 
@@ -237,13 +242,13 @@ namespace TowerDefense
 
             for (int i = 0; i < bloons.Count; i++)
             {
-                if (IsAttacked(bloons[i]))
+                if (EnemyManager.IsAttacked(bloons[i]))
                 {
                     bloons.RemoveAt(i);
                 }
             }
 
-            EnemyCreate(gameTime, ref bloons);
+            EnemyManager.EnemyCreate(gameTime, ref bloons);
 
             prevState = currState;
 
@@ -282,6 +287,10 @@ namespace TowerDefense
             for (int i = 0; i < monkeys.Count; i++)
             {
                 monkeys[i].Draw(spriteBatch);
+                if (monkeys[i].Dot != null)
+                {
+                    monkeys[i].Dot.DrawRectangle(spriteBatch);
+                }
             }
 
             for (int i = 0; i < bloons.Count; i++)

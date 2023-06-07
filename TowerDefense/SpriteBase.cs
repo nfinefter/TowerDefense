@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
+using MonoGame.Extended;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,6 +31,11 @@ namespace TowerDefense
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(Tex, Pos, SourceRectangle, Color, Rotation, Origin, SpriteEffects.None, 0);
+        }
+        
+        public void DrawRectangle(SpriteBatch spriteBatch)
+        {
+            spriteBatch.FillRectangle(new Rectangle(Pos.X, Pos.Y, 10, 10), Color, 0);
         }
 
         public abstract void Update(GameTime gameTime);

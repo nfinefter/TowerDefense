@@ -16,9 +16,9 @@ namespace TowerDefense
         TimeSpan shootTime = TimeSpan.FromSeconds(1);
         TimeSpan shootWait;
 
-        private Enemy Target;
+        public Sprite Dot;
 
-        //Figure out interpolation and all that just using this for now
+        private Enemy Target;
 
         public static List<Projectile> projectiles = new List<Projectile>();
 
@@ -32,8 +32,6 @@ namespace TowerDefense
         {
             shootWait = TimeSpan.Zero;
         }
-
-        //x=(1-s)a+sb
 
         public override void Update(GameTime time)
         {
@@ -61,7 +59,9 @@ namespace TowerDefense
                     projectiles[i].Pos.Y += (int)xLength;
                 }
             }
-            //dart throwing works just fix visual rotation and add bloon health instead of one shotting.
+
+            
+
         }
         public Projectile AddProjectile()
         {
@@ -113,7 +113,7 @@ namespace TowerDefense
 
                         enemies[j].Rank--;
 
-                        RankCheck(enemies[j]);
+                        EnemyManager.RankCheck(enemies[j]);
 
                         projectiles.RemoveAt(i);
 
@@ -127,6 +127,10 @@ namespace TowerDefense
                 
                 }
             }
+        }
+        public void CreateDot()
+        {
+            Dot = new Sprite(null, new Rectangle(Pos.X + 50, Pos.Y, 10, 10), Color.Red, 0, Origin);
         }
 
     }
