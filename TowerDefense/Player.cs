@@ -55,8 +55,8 @@ namespace TowerDefense
                     double yLength = Math.Sin(projectiles[i].Rotation) * 20;
                     double xLength = Math.Cos(projectiles[i].Rotation) * 20;
 
-                    projectiles[i].Pos.X += (int)yLength;
-                    projectiles[i].Pos.Y += (int)xLength;
+                    projectiles[i].Pos.X += (int)xLength;
+                    projectiles[i].Pos.Y += (int)yLength;
                 }
             }
 
@@ -67,9 +67,15 @@ namespace TowerDefense
         {
             ContentManager manager = ContentManager.Instance;
 
-            float rotation = MathF.Atan2(-(Pos.Y - Target.Pos.Y), (Pos.X - Target.Pos.X));
+            float offset = 0;
+            if (Pos.X == Target.Pos.X)
+            {
+                offset = .1f;
+            }
 
-            rotation -= MathHelper.ToRadians(90);
+            float rotation = MathF.Atan2(Target.Pos.Y - Pos.Y, Target.Pos.X + offset - Pos.X); 
+
+       //     rotation -= MathHelper.ToRadians(90);
 
             return new Projectile(manager[Textures.Dart], Pos, Color.Black, rotation, Vector2.Zero, Damage, 20, this);
         }
@@ -109,7 +115,7 @@ namespace TowerDefense
                     {
                         projectiles[i].DamageCalc();
 
-                        Game1.money += ((float)enemies[j].Rank/ 10f);
+                        Game1.money += ((float)enemies[j].Rank/ 5f);
 
                         enemies[j].Rank--;
 

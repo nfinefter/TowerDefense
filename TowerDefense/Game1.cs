@@ -128,15 +128,26 @@ namespace TowerDefense
                 Exit();
 
             currState = Mouse.GetState().LeftButton;
-
+            for (int i = 1; i < monkeys.Count; i++)
+            {
+                if (monkeys[i].Hitbox.Contains(Mouse.GetState().Position) && currState == ButtonState.Pressed)
+                {
+                    selectedMonkey = monkeys[i];
+                }
+            }
+            for (int i = 1; i < monkeys.Count; i++)
+            {
+                monkeys[i].FindTarget(bloons);
+                monkeys[i].Update(gameTime);
+            }
             if (Vector2.Distance(new Vector2(monkeys[0].Pos.X, monkeys[0].Pos.Y), new Vector2(Mouse.GetState().Position.X, Mouse.GetState().Position.Y)) < 100 && Mouse.GetState().LeftButton == ButtonState.Pressed && prevState == ButtonState.Released && dragging == false && money >= 100)
             {
                 monkeys.Add(new Player(monkeyImage, monkeys[0].Pos, Color.White, 0, new Vector2(monkeyImage.Width / 2, monkeyImage.Height / 2), MonkeySource, 0, 0, 5, 25));
                 money -= 100;
 
-                selectedMonkey.CreateDot();
-
                 dragging = true;
+
+
 
                 if (Mouse.GetState().LeftButton != ButtonState.Pressed)
                 {
@@ -150,6 +161,7 @@ namespace TowerDefense
             }
             if (Keyboard.GetState().IsKeyDown(Keys.Enter) && illegalPos == false)
             {
+                selectedMonkey.CreateDot();
                 dragging = false;
                 monkeys[monkeys.Count - 1].Placed = true;
             }
@@ -188,33 +200,40 @@ namespace TowerDefense
                 }
             }
 
-            for (int i = 1; i < monkeys.Count; i++)
-            {
-                if (monkeys[i].Hitbox.Contains(Mouse.GetState().Position) && currState == ButtonState.Pressed)
-                {
-                    selectedMonkey = monkeys[i];
-                }
-
-            }
+         
             if (sellButton.Contains(Mouse.GetState().Position) && currState == ButtonState.Pressed && prevState == ButtonState.Released)
             {
-                if (monkeys.Contains(selectedMonkey) && monkeys.Count > 0)
+                if (monkeys.Contains(selectedMonkey) && monkeys.Count > 1)
                 {
+                   
+                    for (int i = 0; i < Player.projectiles.Count; i++)
+                    {
+                        if (Player.projectiles[i].ThrownFrom == selectedMonkey)
+                        {
+                            Player.projectiles.RemoveAt(i);
+                        }
+                    }
+
                     monkeys.Remove(selectedMonkey);
-                    money += 100;
+                    money += (100* selectedMonkey.Level) + 100;
                     selectedMonkey = monkeys[0];
                 }
             }
             if (upgradeButton.Contains(Mouse.GetState().Position) && currState == ButtonState.Pressed && prevState == ButtonState.Released && money >= 100)
             {
-                if (monkeys.Contains(selectedMonkey) && monkeys.Count > 0 && selectedMonkey.Level < 6)
+                if (selectedMonkey != monkeys[0])
                 {
-                    selectedMonkey.DmgMultiplier++;
-                    money -= 100;
-                    selectedMonkey.Level++;
-                    PlayerManager.UpgradeDot(selectedMonkey);
+
+                    if (monkeys.Contains(selectedMonkey) && monkeys.Count > 0 && selectedMonkey.Level < 5)
+                    {
+                        selectedMonkey.DmgMultiplier++;
+                        money -= 100;
+                        selectedMonkey.Level++;
+                        PlayerManager.UpgradeDot(selectedMonkey);
+                    }
                 }
             }
+         
 
             for (int i = 0; i < bloons.Count; i++)
             {
@@ -233,11 +252,7 @@ namespace TowerDefense
                 //    }
                 //}
             }
-            for (int i = 1; i < monkeys.Count; i++)
-            {
-                monkeys[i].FindTarget(bloons);
-                monkeys[i].Update(gameTime);
-            }
+          
             Player.CheckKill(ref bloons);
 
             for (int i = 0; i < bloons.Count; i++)
@@ -326,7 +341,10 @@ namespace TowerDefense
             //Draws All Projectiles
             for (int i = 0; i < Player.projectiles.Count; i++)
             {
+                var temp = Player.projectiles[i].Rotation;
+                Player.projectiles[i].Rotation -= 90;
                 Player.projectiles[i].Draw(spriteBatch);
+                Player.projectiles[i].Rotation += 90;
             }
 
             //Draws Hitboxes

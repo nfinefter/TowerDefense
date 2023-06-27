@@ -10,33 +10,20 @@ namespace TowerDefense
 {
     public static class PlayerManager
     {
+
+        static readonly Color[] UpgradeColors =
+        {
+            Color.Blue,
+            Color.Green,
+            Color.Yellow,
+            Color.Pink,
+            Color.Black
+        };
+
         public static void UpgradeDot(Player monkey)
         {
-            if (monkey.Level == 1)
-            {
-                monkey.Dot.Color = Color.Red;
-            }
-            else if (monkey.Level == 2)
-            {
-                monkey.Dot.Color = Color.Blue;
-            }
-            else if (monkey.Level == 3)
-            {
-                monkey.Dot.Color = Color.Green;
-            }
-            else if (monkey.Level == 4)
-            {
-                monkey.Dot.Color = Color.Yellow;
-            }
-            else if (monkey.Level == 5)
-            {
-                monkey.Dot.Color = Color.Pink;
-            }
-            else if (monkey.Level == 6)
-            {
-                monkey.Dot.Color = Color.Black;
-            }
-
+            monkey.Dot.Color = UpgradeColors[monkey.Level - 1];
+            //D:
         }
 
     }
