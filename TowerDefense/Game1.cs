@@ -351,6 +351,12 @@ namespace TowerDefense
             //spriteBatch.DrawRectangle(monkeys[monkeys.Count - 1].Hitbox, Color.Yellow, 1, 0);
             spriteBatch.DrawRectangle(selectedMonkey.Hitbox, Color.Black, 1, 0);
 
+            if (MonkeyKill(monkeys))
+            {
+                spriteBatch.Draw(ContentManager.Instance[Textures.Bloon], new Rectangle((GraphicsDevice.Viewport.X + GraphicsDevice.Viewport.Width) / 2, (GraphicsDevice.Viewport.Y + GraphicsDevice.Viewport.Height) / 2, 300, 300), Color.Purple);
+                //make it stay on screen for like 5 seconds
+            }
+
             spriteBatch.End();
 
             base.Draw(gameTime);

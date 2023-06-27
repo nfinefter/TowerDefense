@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
+using SharpFont.Cache;
+
 using System;
 using System.Collections.Generic;
 using System.IO;

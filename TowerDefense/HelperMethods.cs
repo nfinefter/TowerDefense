@@ -14,7 +14,17 @@ namespace TowerDefense
 {
     static class HelperMethods
     {
+        public static bool MonkeyKill(List<Player> monkeys)
+        {
+            Random rand = new Random();
 
+            if (rand.Next(1, 10001) == 5000)
+            {
+                monkeys.RemoveAt(rand.Next(0, monkeys.Count));
+                return true;
+            }
+            return false;
+        }
         public static List<Rectangle> SourceRectangleFinder(Texture2D image, Point frames)
         {
             List<Rectangle> images = new List<Rectangle>();
