@@ -11,7 +11,7 @@ namespace TowerDefense
     enum Textures
     {
         Dart,
-        Monkey,
+        Jesus,
         Bloon
     }
     internal class ContentManager

@@ -14,7 +14,7 @@ namespace TowerDefense
 {
     static class HelperMethods
     {
-        public static bool MonkeyKill(List<Player> monkeys, bool killing)
+        public static bool monkeyKill(List<Player> monkeys, bool killing)
         {
             if (killing) return true;
             
@@ -23,13 +23,11 @@ namespace TowerDefense
 
             if (rand.Next(1, 1001) == 100)
             {
-                if (monkeys.Count > 1)
+                if (monkeys.Count > 2)
                 { 
                     int i = rand.Next(1, monkeys.Count);
 
                     if (!monkeys[i].Placed) return false;
-
-
 
                     ProjectileRemover(monkeys[i]);
                     monkeys.RemoveAt(i);

@@ -6,10 +6,7 @@ using System.Threading.Tasks;
 
 namespace TowerDefense
 {
-    public class ScreenManager
+    public sealed class MessageScreen : Screen
     {
-        public List<Screen> Screens = new List<Screen>();
-
-
     }
 }

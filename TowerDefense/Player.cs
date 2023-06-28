@@ -75,8 +75,6 @@ namespace TowerDefense
 
             float rotation = MathF.Atan2(Target.Pos.Y - Pos.Y, Target.Pos.X + offset - Pos.X); 
 
-       //     rotation -= MathHelper.ToRadians(90);
-
             return new Projectile(manager[Textures.Dart], Pos, Color.Black, rotation, Vector2.Zero, Damage, 20, this);
         }
 
