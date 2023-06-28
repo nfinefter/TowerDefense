@@ -14,13 +14,26 @@ namespace TowerDefense
 {
     static class HelperMethods
     {
-        public static bool MonkeyKill(List<Player> monkeys)
+        public static bool MonkeyKill(List<Player> monkeys, bool killing)
         {
+            if (killing) return true;
+            
+
             Random rand = new Random();
 
-            if (rand.Next(1, 10001) == 5000)
+            if (rand.Next(1, 1001) == 100)
             {
-                monkeys.RemoveAt(rand.Next(0, monkeys.Count));
+                if (monkeys.Count > 1)
+                { 
+                    int i = rand.Next(1, monkeys.Count);
+
+                    if (!monkeys[i].Placed) return false;
+
+
+
+                    ProjectileRemover(monkeys[i]);
+                    monkeys.RemoveAt(i);
+                }
                 return true;
             }
             return false;
@@ -46,6 +59,18 @@ namespace TowerDefense
 
             return images;
         }
+        public static void ProjectileRemover(Player selectedMonkey)
+        {
+
+            for (int i = 0; i < Player.projectiles.Count; i++)
+            {
+                if (Player.projectiles[i].ThrownFrom == selectedMonkey)
+                {
+                    Player.projectiles.RemoveAt(i);
+                }
+            }
+        }
+
         public static void Sell(Player selectedMonkey, ref int money)
         {
 
