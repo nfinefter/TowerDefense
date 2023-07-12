@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TowerDefense
+namespace HelperLibrary
 {
     public sealed class Sprite : SpriteBase
     {

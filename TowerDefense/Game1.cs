@@ -1,4 +1,4 @@
-﻿
+﻿global using HelperLibrary;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -26,7 +26,6 @@ namespace TowerDefense
         Sprite healthIMG = default;
         List<Player> monkeys = new List<Player>();
         List<Enemy> bloons = new List<Enemy>();
-        List<Projectile> projectiles = new List<Projectile>();
         Texture2D jesusImage;
         Texture2D bloonImage;
         public static Texture2D dartImage;
@@ -48,10 +47,8 @@ namespace TowerDefense
         TimeSpan bloonKillerDelay = TimeSpan.FromSeconds(5);
         TimeSpan timer;
         bool killing;
-        GameScreen Main = new GameScreen();
-        MessageScreen MessageScreen = new MessageScreen();
-        ScreenManager screenManager = new ScreenManager();
-        GameScreen Menu = new GameScreen();
+        GameScreen Game = new GameScreen();
+        MenuScreen Menu = new MenuScreen();
         public static Rectangle Start;
         Player Saint;
         bool GameStarted = false;
@@ -94,11 +91,16 @@ namespace TowerDefense
 
         protected override void LoadContent()
         {
+
             spriteFont = Content.Load<SpriteFont>("File");
 
             jesusImage = Content.Load<Texture2D>("DartMnokeySpriteSheetEdited");
             bloonImage = Content.Load<Texture2D>("balloon");
             dartImage = Content.Load<Texture2D>("Dart");
+
+            ScreenManager.Instance.Init((Screenum.Game, Game), (Screenum.Menu, Menu));
+
+            ScreenManager.Instance.currentScreen = Screenum.Menu;
 
             ContentManager.Instance[Textures.Dart] = dartImage;
             ContentManager.Instance[Textures.Jesus] = jesusImage;
@@ -126,11 +128,8 @@ namespace TowerDefense
 
             selectedMonkey = monkeys[0];
 
-            Main.Sprites.Add(moneyIMG);
-            Main.Sprites.Add(healthIMG);
-
-            screenManager.Screens.Add(Main);
-            screenManager.Screens.Add(MessageScreen);
+            Menu.Sprites.Add(moneyIMG);
+            Menu.Sprites.Add(healthIMG);
 
             Menu.Buttons.Add(new Rectangle((GraphicsDevice.Viewport.X + GraphicsDevice.Viewport.Width) / 2, (GraphicsDevice.Viewport.Y + GraphicsDevice.Viewport.Height) / 2, 100, 100));
             Menu.Buttons.Add(new Rectangle((GraphicsDevice.Viewport.X + GraphicsDevice.Viewport.Width) / 2, (GraphicsDevice.Viewport.Y + GraphicsDevice.Viewport.Height) / 2 + 200, 100, 100));
@@ -143,9 +142,13 @@ namespace TowerDefense
         protected override void Update(GameTime gameTime)
         {
             updates++;
+            ScreenManager.Instance.Update(gameTime);
+            #region no
+
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+          
             currState = Mouse.GetState().LeftButton;
             for (int i = 1; i < monkeys.Count; i++)
             {
@@ -213,6 +216,8 @@ namespace TowerDefense
 
             prevState = currState;
 
+            ScreenManager.Instance.Update(gameTime);
+
             base.Update(gameTime);
         }
 
@@ -227,11 +232,11 @@ namespace TowerDefense
                 {
                     //Red highlighting for whenever illegal monkey is trying to be placed
 
-                    if (monkeys[monkeys.Count - 1].Hitbox.Intersects(path[i].Hitbox()))
-                    {
-                        monkeys[monkeys.Count - 1].Color = Color.Red;
-                        illegalPos = true;
-                    }
+                    //if (monkeys[monkeys.Count - 1].Hitbox.Intersects(path[i].Hitbox()))
+                    //{
+                    //    monkeys[monkeys.Count - 1].Color = Color.Red;
+                    //    illegalPos = true;
+                    //}
                 }
             }
             if (monkeys[monkeys.Count - 1].Hitbox.Intersects(menuDimensions) || !new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height).Contains(monkeys[monkeys.Count - 1].Hitbox))
@@ -309,6 +314,7 @@ namespace TowerDefense
             }
 
         }
+        #endregion
         protected override void Draw(GameTime gameTime)
         {
             draws++;
@@ -323,12 +329,15 @@ namespace TowerDefense
 
             spriteBatch.Begin();
 
-            for (int i = 0; i < Menu.Buttons.Count; i++)
+            if (ScreenManager.Instance.CurrentScreen == Menu)
             {
-                spriteBatch.FillRectangle(Menu.Buttons[i], Color.Black, 0);
+                for (int i = 0; i < Menu.Buttons.Count; i++)
+                {
+                    spriteBatch.FillRectangle(Menu.Buttons[i], Color.Black, 0);
+                }
             }
 
-            if (GameStarted)
+            if (ScreenManager.Instance.CurrentScreen == Game)
             {
                 for (int i = 0; i < pathDrawDelay; i++)
                 {
@@ -340,9 +349,9 @@ namespace TowerDefense
                     pathDrawDelay++;
                 }
 
-                for (int i = 0; i < Main.Sprites.Count; i++)
+                for (int i = 0; i < Game.Sprites.Count; i++)
                 {
-                    Main.Sprites[i].Draw(spriteBatch);
+                    Game.Sprites[i].Draw(spriteBatch);
                 }
 
                 for (int i = 0; i < monkeys.Count; i++)

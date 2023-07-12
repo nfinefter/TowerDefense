@@ -137,5 +137,6 @@ namespace TowerDefense
             Dot = new Sprite(null, new Rectangle(Pos.X + 50, Pos.Y, 10, 10), Color.Red, 0, Origin);
         }
 
+
     }
 }

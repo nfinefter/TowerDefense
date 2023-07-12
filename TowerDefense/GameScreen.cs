@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace TowerDefense
 {
-    public sealed class GameScreen : Screen
+    internal class GameScreen
     {
-
     }
 }

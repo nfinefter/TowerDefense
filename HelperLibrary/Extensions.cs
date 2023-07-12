@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 using WeightedDirectedGraphs;
 
-namespace TowerDefense
+namespace HelperLibrary
 {
     public static class Extensions
     {
@@ -22,9 +22,9 @@ namespace TowerDefense
             return new Microsoft.Xna.Framework.Point(point.X, point.Y);
         }
 
-        public static Rectangle Hitbox(this Vertex<System.Drawing.Point> vert)
-        {
-            return new Rectangle(vert.Value.X, vert.Value.Y, Game1.size, Game1.size);
-        }
+        //public static Rectangle Hitbox(this Vertex<System.Drawing.Point> vert)
+        //{
+        //    return new Rectangle(vert.Value.X, vert.Value.Y, Game1.size, Game1.size);
+        //}
     }
 }
