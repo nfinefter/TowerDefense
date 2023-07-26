@@ -1,0 +1,48 @@
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.SymbolStore;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace HelperLibrary
+{
+    public class Button : SpriteBase
+    {
+        public Action PressedAction;
+        public SpriteFont Font;
+        public string Text;
+        public bool Click { get; private set; }
+        public bool WasClicked { get; private set; }
+
+        public override Vector2 Origin => throw new NotImplementedException();
+
+        public override Rectangle? SourceRectangle => throw new NotImplementedException();
+
+        public Button(Texture2D tex, Rectangle pos, Color color, float rotation, SpriteFont font, string text, Action pressedAction)
+         : base(tex, pos, color, rotation)
+        {
+            Font = font;
+            Text = text;
+            PressedAction = pressedAction;
+        }
+
+        public override void Update(GameTime gameTime)
+        { 
+            if (Pos.Contains(Mouse.GetState().Position) && ScreenManager.Instance.CurrentState == ButtonState.Pressed && ScreenManager.Instance.PrevState != ScreenManager.Instance.CurrentState)
+            {
+                Click = true;
+            }
+
+            if (Click)
+            {
+                PressedAction();
+            }
+
+        }
+    }
+}

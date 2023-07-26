@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TowerDefense
 {
-    internal class GameScreen
+    internal class Screens
     {
     }
 }

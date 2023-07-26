@@ -27,32 +27,12 @@ namespace HelperLibrary
     {
         public List<Sprite> Sprites = new List<Sprite>();
 
-        public List<Rectangle> Buttons = new List<Rectangle>();
+        public List<Button> Buttons = new List<Button>();
 
         public abstract Screenum Update(GameTime gameTime);
 
         public abstract void Draw(SpriteBatch spriteBatch);
     }
-
-    public class MenuScreen : Screen
-    {
-        public List<Rectangle> Buttons = new List<Rectangle>();
-
-        public override void Draw(SpriteBatch spriteBatch)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override Screenum Update(GameTime gameTime)
-        {
-            if (Buttons[0].Contains(Mouse.GetState().Position) && Instance.CurrentState == ButtonState.Pressed && Instance.PrevState == ButtonState.Released)
-            {
-                return Screenum.Game;
-            }
-            return Screenum.Menu;
-        }
-    }
-
 
     public class ScreenManager
     {
@@ -75,7 +55,6 @@ namespace HelperLibrary
         }
 
         public Screen CurrentScreen => backingScreens[currentScreen];
-
 
         public void Update(GameTime gameTime)
         {

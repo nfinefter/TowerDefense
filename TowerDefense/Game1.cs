@@ -51,7 +51,6 @@ namespace TowerDefense
         MenuScreen Menu = new MenuScreen();
         public static Rectangle Start;
         Player Saint;
-        bool GameStarted = false;
 
         int moneyHealthSizer = 50;
         int moneyHealthRightScreenBuffer = 250;
@@ -92,6 +91,11 @@ namespace TowerDefense
         protected override void LoadContent()
         {
 
+            Texture2D pixel = new Texture2D(GraphicsDevice, 1, 1);
+            pixel.SetData<Color>(new Color[] { Color.White });
+
+            Button sellButton = new Button(pixel, new Rectangle(moneyIMG.Pos.X + 10, GraphicsDevice.Viewport.Height - 60, 110, 50), default, default, default, default, Sell);
+
             spriteFont = Content.Load<SpriteFont>("File");
 
             jesusImage = Content.Load<Texture2D>("DartMnokeySpriteSheetEdited");
@@ -123,7 +127,7 @@ namespace TowerDefense
             bloons.Add(new Enemy(bloonImage, Start, Color.Red, 0, new Vector2(bloonImage.Width / 2, bloonImage.Height / 2), 0, path, 2));
             bloons.Add(new Enemy(bloonImage, Start, Color.Red, 0, new Vector2(bloonImage.Width / 2, bloonImage.Height / 2), 0, path, 1));
 
-            sellButton = new Rectangle(moneyIMG.Pos.X + 10, GraphicsDevice.Viewport.Height - 60, 110, 50);
+            //sellButton = new Rectangle(moneyIMG.Pos.X + 10, GraphicsDevice.Viewport.Height - 60, 110, 50);
             upgradeButton = new Rectangle(sellButton.X + 120, GraphicsDevice.Viewport.Height - 60, 110, 50);
 
             selectedMonkey = monkeys[0];
@@ -134,6 +138,8 @@ namespace TowerDefense
             Menu.Buttons.Add(new Rectangle((GraphicsDevice.Viewport.X + GraphicsDevice.Viewport.Width) / 2, (GraphicsDevice.Viewport.Y + GraphicsDevice.Viewport.Height) / 2, 100, 100));
             Menu.Buttons.Add(new Rectangle((GraphicsDevice.Viewport.X + GraphicsDevice.Viewport.Width) / 2, (GraphicsDevice.Viewport.Y + GraphicsDevice.Viewport.Height) / 2 + 200, 100, 100));
 
+            Game.Sprites.Add(moneyIMG);
+            Game.Sprites.Add(healthIMG);
 
             // TODO: use this.Content to load your game content here
         }
@@ -143,12 +149,13 @@ namespace TowerDefense
         {
             updates++;
             ScreenManager.Instance.Update(gameTime);
-            #region no
+
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-          
+            #region no
+
             currState = Mouse.GetState().LeftButton;
             for (int i = 1; i < monkeys.Count; i++)
             {
@@ -303,17 +310,17 @@ namespace TowerDefense
                 }
             }
         }
-        void DrawProjectiles()
-        {
-            for (int i = 0; i < Player.projectiles.Count; i++)
-            {
-                var temp = Player.projectiles[i].Rotation;
-                Player.projectiles[i].Rotation -= 90;
-                Player.projectiles[i].Draw(spriteBatch);
-                Player.projectiles[i].Rotation += 90;
-            }
+        //void DrawProjectiles()
+        //{
+        //    for (int i = 0; i < Player.projectiles.Count; i++)
+        //    {
+        //        var temp = Player.projectiles[i].Rotation;
+        //        Player.projectiles[i].Rotation -= 90;
+        //        Player.projectiles[i].Draw(spriteBatch);
+        //        Player.projectiles[i].Rotation += 90;
+        //    }
 
-        }
+        //}
         #endregion
         protected override void Draw(GameTime gameTime)
         {
@@ -349,10 +356,7 @@ namespace TowerDefense
                     pathDrawDelay++;
                 }
 
-                for (int i = 0; i < Game.Sprites.Count; i++)
-                {
-                    Game.Sprites[i].Draw(spriteBatch);
-                }
+                Game.Draw(spriteBatch);
 
                 for (int i = 0; i < monkeys.Count; i++)
                 {
@@ -391,7 +395,7 @@ namespace TowerDefense
                 //spriteBatch.DrawRectangle(monkeys[monkeys.Count - 1].Hitbox, Color.Yellow, 1, 0);
                 spriteBatch.DrawRectangle(selectedMonkey.Hitbox, Color.Black, 1, 0);
 
-                DrawProjectiles();
+                //DrawProjectiles();
 
                 MonkeyKill(gameTime);
             }
