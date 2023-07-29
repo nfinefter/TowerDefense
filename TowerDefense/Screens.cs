@@ -279,7 +279,6 @@ namespace TowerDefense
         {
             if (killing) return true;
 
-
             Random rand = new Random();
 
             if (rand.Next(1, 1001) == 100)

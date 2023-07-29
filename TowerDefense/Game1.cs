@@ -25,9 +25,6 @@ namespace TowerDefense
         private SpriteBatch spriteBatch;
         int updates = 0;
         int draws = 0;
-        TimeSpan bloonKillerDelay = TimeSpan.FromSeconds(5);
-        TimeSpan timer;
-        bool killing;
         GameScreen Game = new GameScreen();
         MenuScreen Menu = new MenuScreen();
         public Rectangle Start;
@@ -99,6 +96,10 @@ namespace TowerDefense
             Game.Monkeys.Add(new Player(Game.JesusImage, new Rectangle(GraphicsDevice.Viewport.Width - 200, 200, 100, 100), Color.White, 0, new Vector2(Game.JesusImage.Width / 2, Game.JesusImage.Height / 2), Game.MonkeySource, 0, 0, 5, 25));
             Game.GameWidth = GraphicsDevice.Viewport.Width;
             Game.GameHeight = GraphicsDevice.Viewport.Height;
+            Game.GameX = GraphicsDevice.Viewport.X;
+            Game.GameY = GraphicsDevice.Viewport.Y;
+
+            Game.IscariotBloon = new Enemy(Game.BloonImage, Start, Color.Purple, 0, new Vector2(Game.BloonImage.Width / 2, Game.BloonImage.Height / 2), 0, GameScreen.Path, 0);
 
             Menu.Sprites.Add(Game.MoneyIMG);
             Menu.Sprites.Add(Game.HealthIMG);
@@ -258,21 +259,21 @@ namespace TowerDefense
         //    }
 
         //}
-        void MonkeyKill(GameTime gameTime)
-        {
-            killing = monkeyKill(Game.Monkeys, killing);
-            if (killing)
-            {
-                spriteBatch.Draw(ContentManager.Instance[Textures.Bloon], new Rectangle((GraphicsDevice.Viewport.X + GraphicsDevice.Viewport.Width) / 2 - 200, (GraphicsDevice.Viewport.Y + GraphicsDevice.Viewport.Height) / 2 - 200, 500, 500), Color.Purple);
+        //void MonkeyKill(GameTime gameTime)
+        //{
+        //    killing = monkeyKill(Game.Monkeys, killing);
+        //    if (killing)
+        //    {
+        //        spriteBatch.Draw(ContentManager.Instance[Textures.Bloon], new Rectangle((GraphicsDevice.Viewport.X + GraphicsDevice.Viewport.Width) / 2 - 200, (GraphicsDevice.Viewport.Y + GraphicsDevice.Viewport.Height) / 2 - 200, 500, 500), Color.Purple);
 
-                timer += gameTime.ElapsedGameTime;
-                if (timer > bloonKillerDelay)
-                {
-                    killing = false;
-                    timer = TimeSpan.Zero;
-                }
-            }
-        }
+        //        timer += gameTime.ElapsedGameTime;
+        //        if (timer > bloonKillerDelay)
+        //        {
+        //            killing = false;
+        //            timer = TimeSpan.Zero;
+        //        }
+        //    }
+        //}
         //void DrawProjectiles()
         //{
         //    for (int i = 0; i < Player.projectiles.Count; i++)
@@ -354,7 +355,6 @@ namespace TowerDefense
 
                 //DrawProjectiles();
 
-                MonkeyKill(gameTime);
             }
             spriteBatch.End();
 
