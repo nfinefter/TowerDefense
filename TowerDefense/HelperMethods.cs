@@ -14,28 +14,28 @@ namespace TowerDefense
 {
     static class HelperMethods
     {
-        public static bool monkeyKill(List<Player> monkeys, bool killing)
-        {
-            if (killing) return true;
+        //public static bool monkeyKill(List<Player> monkeys, bool killing)
+        //{
+        //    if (killing) return true;
             
 
-            Random rand = new Random();
+        //    Random rand = new Random();
 
-            if (rand.Next(1, 1001) == 100)
-            {
-                if (monkeys.Count > 2)
-                { 
-                    int i = rand.Next(1, monkeys.Count);
+        //    if (rand.Next(1, 1001) == 100)
+        //    {
+        //        if (monkeys.Count > 2)
+        //        { 
+        //            int i = rand.Next(1, monkeys.Count);
 
-                    if (!monkeys[i].Placed) return false;
+        //            if (!monkeys[i].Placed) return false;
 
-                    ProjectileRemover(monkeys[i]);
-                    monkeys.RemoveAt(i);
-                }
-                return true;
-            }
-            return false;
-        }
+        //            ProjectileRemover(monkeys[i]);
+        //            monkeys.RemoveAt(i);
+        //        }
+        //        return true;
+        //    }
+        //    return false;
+        //}
         public static List<Rectangle> SourceRectangleFinder(Texture2D image, Point frames)
         {
             List<Rectangle> images = new List<Rectangle>();
@@ -67,11 +67,6 @@ namespace TowerDefense
                     Player.projectiles.RemoveAt(i);
                 }
             }
-        }
-
-        public static void Sell(Player selectedMonkey, ref int money)
-        {
-
         }
 
       

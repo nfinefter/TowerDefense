@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.SymbolStore;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,7 +15,6 @@ namespace HelperLibrary
     public class Button : SpriteBase
     {
         public Action PressedAction;
-        public SpriteFont Font;
         public string Text;
         public bool Click { get; private set; }
         public bool WasClicked { get; private set; }
@@ -23,10 +23,9 @@ namespace HelperLibrary
 
         public override Rectangle? SourceRectangle => throw new NotImplementedException();
 
-        public Button(Texture2D tex, Rectangle pos, Color color, float rotation, SpriteFont font, string text, Action pressedAction)
+        public Button(Texture2D tex, Rectangle pos, Color color, float rotation, string text, Action pressedAction)
          : base(tex, pos, color, rotation)
         {
-            Font = font;
             Text = text;
             PressedAction = pressedAction;
         }
@@ -42,7 +41,7 @@ namespace HelperLibrary
             {
                 PressedAction();
             }
-
         }
+
     }
 }

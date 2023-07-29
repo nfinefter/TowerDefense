@@ -22,6 +22,7 @@ namespace HelperLibrary
         Menu,
         Pause,
     }
+   
 
     public abstract class Screen
     {

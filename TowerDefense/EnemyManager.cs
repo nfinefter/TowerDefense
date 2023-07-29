@@ -14,7 +14,7 @@ namespace TowerDefense
         {
             if (enemy.PathPosition + 1 == enemy.Path.Count)
             {
-                Game1.health -= enemy.Rank;
+                GameScreen.Health -= enemy.Rank;
                 return true;
             }
             return false;
@@ -68,7 +68,7 @@ namespace TowerDefense
 
             if (moveWait > moveTime - spawnSpeed)
             {
-                bloons.Add(new Enemy(ContentManager.Instance[Textures.Bloon], Game1.Start, Color.White, 0, new Vector2(ContentManager.Instance[Textures.Bloon].Width / 2, ContentManager.Instance[Textures.Bloon].Height / 2), 0, Game1.path, rand.Next(minRank, 7)));
+                bloons.Add(new Enemy(ContentManager.Instance[Textures.Bloon], GameScreen.Start, Color.White, 0, new Vector2(ContentManager.Instance[Textures.Bloon].Width / 2, ContentManager.Instance[Textures.Bloon].Height / 2), 0, GameScreen.Path, rand.Next(minRank, 7)));
                 min += 1;
                 max += 1;
                 moveWait = TimeSpan.Zero;

@@ -113,7 +113,7 @@ namespace TowerDefense
                     {
                         projectiles[i].DamageCalc();
 
-                        Game1.money += ((float)enemies[j].Rank/ 5f);
+                        GameScreen.Money += ((float)enemies[j].Rank/ 5f);
 
                         enemies[j].Rank--;
 
