@@ -59,20 +59,20 @@ namespace TowerDefense;
             Graph = new Graph<Point>();
 
             
-            for (int x = 0; x+ size< scrWidth; x +=size)
+            for (int x = 0; x+ GameScreen.size< scrWidth; x += GameScreen.size)
             {
-                for (int y = 0; y + size < scrHeight; y += size)
+                for (int y = 0; y + GameScreen.size < scrHeight; y += GameScreen.size)
                 {
                     Vertex<Point> temp = new Vertex<Point>(new Point(x, y));
                     Graph.AddVertex(temp);
 
                     if (x >= 0 && y >= 0)
                     {
-                        Vertex<Point> prevX = Graph.Search(new Point(x - size, y));
+                        Vertex<Point> prevX = Graph.Search(new Point(x - GameScreen.size, y));
                         Graph.AddEdge(prevX, temp, 1);
                         Graph.AddEdge(temp, prevX, 1);
 
-                        Vertex<Point> prevY = Graph.Search(new Point(x, y - size));
+                        Vertex<Point> prevY = Graph.Search(new Point(x, y - GameScreen.size));
                         Graph.AddEdge(prevY, temp, 1);
                         Graph.AddEdge(temp, prevY, 1);
                         

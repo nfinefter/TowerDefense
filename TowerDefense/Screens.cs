@@ -34,10 +34,10 @@ namespace TowerDefense
     }
     public class GameScreen : Screen
     {
-        public List<Player> Monkeys = new List<Player>();
+        public static List<Player> Monkeys = new List<Player>();
         public List<Enemy> Bloons = new List<Enemy>();
 
-        public Enemy IscariotBloon;
+        public KillerEnemy IscariotBloon;
         public Player SelectedMonkey;
 
         static public float Money = 1000;
@@ -54,10 +54,6 @@ namespace TowerDefense
         bool illegalPos = false;
         public static List<Vertex<System.Drawing.Point>> Path = new List<Vertex<System.Drawing.Point>>();
         public Rectangle GameDimensions;
-        public int GameWidth;
-        public int GameHeight;
-        public int GameX;
-        public int GameY;
         int pathDrawDelay = 0;
         public static Rectangle Start;
         public SpriteFont Font;
@@ -70,11 +66,11 @@ namespace TowerDefense
 
         public void Initialize()
         {
-            MapXBorder = GameWidth - 250;
+            MapXBorder = Game1.GameWidth - 250;
 
-            Path = map.GeneratePath(MapXBorder, GameHeight);
+            Path = map.GeneratePath(MapXBorder, Game1.GameHeight);
 
-            GameDimensions = new Rectangle(MapXBorder, 0, MapXBorder, GameHeight);
+            GameDimensions = new Rectangle(MapXBorder, 0, MapXBorder, Game1.GameHeight);
 
             Start = new Rectangle(new Microsoft.Xna.Framework.Point(Path[0].Value.X, Path[0].Value.Y), new Point(40, 40));
         }
@@ -90,9 +86,7 @@ namespace TowerDefense
                     Player.projectiles[i].Draw(spriteBatch);
                     Player.projectiles[i].Rotation += 90;
                 }
-
             }
-
             for (int i = 0; i < Sprites.Count; i++)
             {
                 Sprites[i].Draw(spriteBatch);
@@ -123,7 +117,7 @@ namespace TowerDefense
                 }
             }
 
-            spriteBatch.DrawLine(new Vector2(MapXBorder, 0), new Vector2(MapXBorder, GameHeight), Color.Black, 1, 0);
+            spriteBatch.DrawLine(new Vector2(MapXBorder, 0), new Vector2(MapXBorder, Game1.GameHeight), Color.Black, 1, 0);
 
             for (int i = 0; i < map.Graph.Count; i++)
             {
@@ -141,11 +135,7 @@ namespace TowerDefense
                 Buttons[i].Draw(spriteBatch);
             }
 
-            if (killing)
-            {
-                IscariotBloon.Draw(spriteBatch);
-            }
-
+            IscariotBloon.Draw(spriteBatch);
             DrawProjectiles();
         }
 
@@ -210,7 +200,9 @@ namespace TowerDefense
                 }
             }
 
-            killing = MonkeyKill(Monkeys, killing);
+            IscariotBloon.Update(gameTime);
+
+            //killing = MonkeyKill(Monkeys, killing);
 
             EnemyManager.EnemyCreate(gameTime, ref Bloons);
 
@@ -260,7 +252,7 @@ namespace TowerDefense
                 //    }
                 //}
             }
-            if (Monkeys[Monkeys.Count - 1].Hitbox.Intersects(GameDimensions) || !new Rectangle(0, 0, GameWidth, GameHeight).Contains(Monkeys[Monkeys.Count - 1].Hitbox))
+            if (Monkeys[Monkeys.Count - 1].Hitbox.Intersects(GameDimensions) || !new Rectangle(0, 0, Game1.GameWidth, Game1.GameHeight).Contains(Monkeys[Monkeys.Count - 1].Hitbox))
             {
                 Monkeys[Monkeys.Count - 1].Color = Color.Red;
                 illegalPos = true;
@@ -275,27 +267,27 @@ namespace TowerDefense
             }
 
         }
-        public static bool MonkeyKill(List<Player> monkeys, bool killing)
-        {
-            if (killing) return true;
+        //public static bool MonkeyKill(List<Player> monkeys, bool killing)
+        //{
+        //    if (killing) return true;
 
-            Random rand = new Random();
+        //    Random rand = new Random();
 
-            if (rand.Next(1, 1001) == 100)
-            {
-                if (monkeys.Count > 2)
-                {
-                    int i = rand.Next(1, monkeys.Count);
+        //    if (rand.Next(1, 1001) == 100)
+        //    {
+        //        if (monkeys.Count > 2)
+        //        {
+        //            int i = rand.Next(1, monkeys.Count);
 
-                    if (!monkeys[i].Placed) return false;
+        //            if (!monkeys[i].Placed) return false;
 
-                    ProjectileRemover(monkeys[i]);
-                    monkeys.RemoveAt(i);
-                }
-                return true;
-            }
-            return false;
-        }
+        //            ProjectileRemover(monkeys[i]);
+        //            monkeys.RemoveAt(i);
+        //        }
+        //        return true;
+        //    }
+        //    return false;
+        //}
 
 
     }

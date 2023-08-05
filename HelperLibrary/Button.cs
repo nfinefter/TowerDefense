@@ -19,9 +19,9 @@ namespace HelperLibrary
         public bool Click { get; private set; }
         public bool WasClicked { get; private set; }
 
-        public override Vector2 Origin => throw new NotImplementedException();
+        public override Vector2 Origin => Vector2.Zero;
 
-        public override Rectangle? SourceRectangle => throw new NotImplementedException();
+        public override Rectangle? SourceRectangle => new Rectangle(0, 0 ,0 ,0);
 
         public Button(Texture2D tex, Rectangle pos, Color color, float rotation, string text, Action pressedAction)
          : base(tex, pos, color, rotation)

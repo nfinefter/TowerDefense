@@ -1,5 +1,7 @@
 ﻿global using HelperLibrary;
 
+using Assimp;
+
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -20,6 +22,10 @@ namespace TowerDefense
     public class Game1 : Game
     {
         public static int size = 40;
+        public static int GameX;
+        public static int GameY;
+        public static int GameWidth;
+        public static int GameHeight;
 
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
@@ -50,22 +56,16 @@ namespace TowerDefense
             graphics.PreferredBackBufferWidth = 1900;
             graphics.ApplyChanges();
 
-            Game.Initialize();
-
-            base.Initialize();
-        }
-
-        protected override void LoadContent()
-        {
             Texture2D pixel = new Texture2D(GraphicsDevice, 1, 1);
             pixel.SetData<Color>(new Color[] { Color.White });
-
-            Button sellButton = new Button(pixel, new Rectangle(Game.MoneyIMG.Pos.X + 10, GraphicsDevice.Viewport.Height - 60, 110, 50), Color.Red, 0, default, Game.Sell);
-            Button upgradeButton = new Button(pixel, new Rectangle(sellButton.Pos.X + 120, GraphicsDevice.Viewport.Height - 60, 110, 50), Color.Green, 0, default, Game.Upgrade);
 
             ScreenManager.Instance.Init((Screenum.Game, Game), (Screenum.Menu, Menu));
 
             ScreenManager.Instance.currentScreen = Screenum.Menu;
+
+            Game.DartImage = Content.Load<Texture2D>("Dart");
+            Game.JesusImage = Content.Load<Texture2D>("DartMnokeySpriteSheetEdited");
+            Game.BloonImage = Content.Load<Texture2D>("balloon");
 
             ContentManager.Instance[Textures.Dart] = Game.DartImage;
             ContentManager.Instance[Textures.Jesus] = Game.JesusImage;
@@ -73,33 +73,29 @@ namespace TowerDefense
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            //sellButton = new Rectangle(moneyIMG.Pos.X + 10, GraphicsDevice.Viewport.Height - 60, 110, 50);
-            //upgradeButton = new Rectangle(sellButton.Pos.X + 120, GraphicsDevice.Viewport.Height - 60, 110, 50);
+            GameX = GraphicsDevice.Viewport.X;
+            GameY = GraphicsDevice.Viewport.Y;
+            GameWidth = GraphicsDevice.Viewport.Width;
+            GameHeight = GraphicsDevice.Viewport.Height;
 
-            //selectedMonkey = monkeys[0];
-            //Menu.Buttons.Add(new Rectangle((GraphicsDevice.Viewport.X + GraphicsDevice.Viewport.Width) / 2, (GraphicsDevice.Viewport.Y + GraphicsDevice.Viewport.Height) / 2, 100, 100));
-            //Menu.Buttons.Add(new Rectangle((GraphicsDevice.Viewport.X + GraphicsDevice.Viewport.Width) / 2, (GraphicsDevice.Viewport.Y + GraphicsDevice.Viewport.Height) / 2 + 200, 100, 100));
+            Game.Initialize();
 
             Game.Font = Content.Load<SpriteFont>("File");
             Game.MoneyIMG = new Sprite(Content.Load<Texture2D>("money"), new Rectangle(GraphicsDevice.Viewport.Width - moneyHealthRightScreenBuffer, 25, moneyHealthSizer, moneyHealthSizer), Color.Black, 0, Vector2.Zero);
             Game.HealthIMG = new Sprite(Content.Load<Texture2D>("health"), new Rectangle(GraphicsDevice.Viewport.Width - moneyHealthRightScreenBuffer, Game.MoneyIMG.Pos.Height * 2, moneyHealthSizer, moneyHealthSizer), Color.Black, 0, Vector2.Zero);
-            Game.SelectedMonkey = Game.Monkeys[0];
-            Game.DartImage = Content.Load<Texture2D>("Dart");
-            Game.JesusImage = Content.Load<Texture2D>("DartMnokeySpriteSheetEdited");
-            Game.BloonImage = Content.Load<Texture2D>("balloon");
+
             Game.MonkeySource = SourceRectangleFinder(Game.JesusImage, new Point(6, 1));
+            Button sellButton = new Button(pixel, new Rectangle(Game.MoneyIMG.Pos.X + 10, GraphicsDevice.Viewport.Height - 60, 110, 50), Color.Red, 0, default, Game.Sell);
+            Button upgradeButton = new Button(pixel, new Rectangle(sellButton.Pos.X + 120, GraphicsDevice.Viewport.Height - 60, 110, 50), Color.Green, 0, default, Game.Upgrade);
             Game.Saint = new Player(Game.JesusImage, new Rectangle(GraphicsDevice.Viewport.Width - 200, 200, 100, 100), Color.White, 0, new Vector2(Game.JesusImage.Width / 2, Game.JesusImage.Height / 2), Game.MonkeySource, 0, 0, 5, 25); ;
             Game.Bloons.Add(new Enemy(Game.BloonImage, Start, Color.Red, 0, new Vector2(Game.BloonImage.Width / 2, Game.BloonImage.Height / 2), 0, GameScreen.Path, 5));
             Game.Bloons.Add(new Enemy(Game.BloonImage, Start, Color.Red, 0, new Vector2(Game.BloonImage.Width / 2, Game.BloonImage.Height / 2), 0, GameScreen.Path, 3));
             Game.Bloons.Add(new Enemy(Game.BloonImage, Start, Color.Red, 0, new Vector2(Game.BloonImage.Width / 2, Game.BloonImage.Height / 2), 0, GameScreen.Path, 2));
             Game.Bloons.Add(new Enemy(Game.BloonImage, Start, Color.Red, 0, new Vector2(Game.BloonImage.Width / 2, Game.BloonImage.Height / 2), 0, GameScreen.Path, 1));
-            Game.Monkeys.Add(new Player(Game.JesusImage, new Rectangle(GraphicsDevice.Viewport.Width - 200, 200, 100, 100), Color.White, 0, new Vector2(Game.JesusImage.Width / 2, Game.JesusImage.Height / 2), Game.MonkeySource, 0, 0, 5, 25));
-            Game.GameWidth = GraphicsDevice.Viewport.Width;
-            Game.GameHeight = GraphicsDevice.Viewport.Height;
-            Game.GameX = GraphicsDevice.Viewport.X;
-            Game.GameY = GraphicsDevice.Viewport.Y;
+            GameScreen.Monkeys.Add(new Player(Game.JesusImage, new Rectangle(GraphicsDevice.Viewport.Width - 200, 200, 100, 100), Color.White, 0, new Vector2(Game.JesusImage.Width / 2, Game.JesusImage.Height / 2), Game.MonkeySource, 0, 0, 5, 25));
+            Game.SelectedMonkey = GameScreen.Monkeys[0];
 
-            Game.IscariotBloon = new Enemy(Game.BloonImage, Start, Color.Purple, 0, new Vector2(Game.BloonImage.Width / 2, Game.BloonImage.Height / 2), 0, GameScreen.Path, 0);
+            Game.IscariotBloon = new KillerEnemy(Game.BloonImage, new Rectangle(GameX, GameY, (GameX + GameWidth) / 2, (GameY + GameHeight) / 2), Color.Purple, 0, new Vector2(Game.BloonImage.Width / 2, Game.BloonImage.Height / 2), 0, 0);
 
             Menu.Sprites.Add(Game.MoneyIMG);
             Menu.Sprites.Add(Game.HealthIMG);
@@ -110,6 +106,22 @@ namespace TowerDefense
             Game.Sprites.Add(Game.HealthIMG);
             Game.Buttons.Add(sellButton);
             Game.Buttons.Add(upgradeButton);
+
+
+
+            base.Initialize();
+        }
+
+        protected override void LoadContent()
+        {
+
+            //sellButton = new Rectangle(moneyIMG.Pos.X + 10, GraphicsDevice.Viewport.Height - 60, 110, 50);
+            //upgradeButton = new Rectangle(sellButton.Pos.X + 120, GraphicsDevice.Viewport.Height - 60, 110, 50);
+
+            //selectedMonkey = monkeys[0];
+            //Menu.Buttons.Add(new Rectangle((GraphicsDevice.Viewport.X + GraphicsDevice.Viewport.Width) / 2, (GraphicsDevice.Viewport.Y + GraphicsDevice.Viewport.Height) / 2, 100, 100));
+            //Menu.Buttons.Add(new Rectangle((GraphicsDevice.Viewport.X + GraphicsDevice.Viewport.Width) / 2, (GraphicsDevice.Viewport.Y + GraphicsDevice.Viewport.Height) / 2 + 200, 100, 100));
+
 
             // TODO: use this.Content to load your game content here
         }
@@ -124,8 +136,10 @@ namespace TowerDefense
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            Game.Update(gameTime);
-
+            if (ScreenManager.Instance.CurrentScreen == Game)
+            {
+                Game.Update(gameTime);
+            }
             #region no
 
             //currState = Mouse.GetState().LeftButton;
