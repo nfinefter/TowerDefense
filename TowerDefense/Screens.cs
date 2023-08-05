@@ -4,15 +4,8 @@ using Microsoft.Xna.Framework;
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Assimp;
-using System.IO;
 using WeightedDirectedGraphs;
-using static System.Reflection.Metadata.BlobBuilder;
 using MonoGame.Extended;
-using System.Collections;
 
 namespace TowerDefense
 {
@@ -21,8 +14,7 @@ namespace TowerDefense
         public override void Draw(SpriteBatch spriteBatch)
         {
             throw new NotImplementedException();
-        }
-
+        }        
         public override Screenum Update(GameTime gameTime)
         {
             if (Buttons[0].Pos.Contains(Mouse.GetState().Position) && ScreenManager.Instance.CurrentState == ButtonState.Pressed && ScreenManager.Instance.PrevState == ButtonState.Released)
@@ -40,6 +32,7 @@ namespace TowerDefense
         public KillerEnemy IscariotBloon;
         public Player SelectedMonkey;
 
+        public static int size = 40;
         static public float Money = 1000;
         static public int Health = 100;
         bool dragging = false;
@@ -102,7 +95,7 @@ namespace TowerDefense
 
             for (int i = 0; i < pathDrawDelay; i++)
             {
-                spriteBatch.FillRectangle(new Rectangle(Path[i].Value.X, Path[i].Value.Y, Game1.size, Game1.size), Color.White, 0);
+                spriteBatch.FillRectangle(new Rectangle(Path[i].Value.X, Path[i].Value.Y, GameScreen.size, GameScreen.size), Color.White, 0);
             }
             if (pathDrawDelay < Path.Count)
             {
@@ -237,20 +230,21 @@ namespace TowerDefense
 
 
         }
+
         void PlaceMonke()
         {
             illegalPos = false;
             Monkeys[Monkeys.Count - 1].Color = Color.White;
             if (Vector2.Distance(new Vector2(Monkeys[Monkeys.Count - 1].Pos.X, Monkeys[Monkeys.Count - 1].Pos.Y), new Vector2(Mouse.GetState().Position.X, Mouse.GetState().Position.Y)) < 20)
             {
-                //for (int i = 0; i < Path.Count; i++)
-                //{
-                //    if (Monkeys[Monkeys.Count - 1].Hitbox.Intersects(Path[i].Hitbox()))
-                //    {
-                //        Monkeys[Monkeys.Count - 1].Color = Color.Red;
-                //        illegalPos = true;
-                //    }
-                //}
+                for (int i = 0; i < Path.Count; i++)
+                {
+                    if (Monkeys[Monkeys.Count - 1].Hitbox.Intersects(Path[i].Hitbox()))
+                    {
+                        Monkeys[Monkeys.Count - 1].Color = Color.Red;
+                        illegalPos = true;
+                    }
+                }
             }
             if (Monkeys[Monkeys.Count - 1].Hitbox.Intersects(GameDimensions) || !new Rectangle(0, 0, Game1.GameWidth, Game1.GameHeight).Contains(Monkeys[Monkeys.Count - 1].Hitbox))
             {

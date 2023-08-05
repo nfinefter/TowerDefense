@@ -5,7 +5,6 @@ using Assimp;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-
 using MonoGame.Extended;
 using MonoGame.Extended.Timers;
 
@@ -19,9 +18,9 @@ using WeightedDirectedGraphs;
 
 namespace TowerDefense
 {
+
     public class Game1 : Game
     {
-        public static int size = 40;
         public static int GameX;
         public static int GameY;
         public static int GameWidth;
@@ -38,7 +37,6 @@ namespace TowerDefense
         int moneyHealthSizer = 50;
         int moneyHealthRightScreenBuffer = 250;
 
-
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -48,6 +46,7 @@ namespace TowerDefense
 
         protected override void Initialize()
         {
+
             // TODO: Add your initialization logic here
 
             TargetElapsedTime = TimeSpan.FromMilliseconds(17);
