@@ -39,6 +39,7 @@ namespace HelperLibrary
 
             if (Click)
             {
+                Click = !Click;
                 PressedAction();
             }
         }

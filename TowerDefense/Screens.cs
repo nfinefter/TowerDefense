@@ -50,9 +50,6 @@ namespace TowerDefense
         int pathDrawDelay = 0;
         public static Rectangle Start;
         public SpriteFont Font;
-        bool killing;
-        TimeSpan bloonKillerDelay = TimeSpan.FromSeconds(5);
-        TimeSpan timer;
 
         public int MapXBorder;
         public Map map = new Map();
@@ -87,6 +84,8 @@ namespace TowerDefense
             for (int i = 0; i < Buttons.Count; i++)
             {
                 Buttons[i].Draw(spriteBatch);
+                spriteBatch.DrawString(Font, "Sell", new Vector2(Buttons[0].Pos.X + 20, Buttons[0].Pos.Y + 20), Color.Black);
+                spriteBatch.DrawString(Font, "Upgrade", new Vector2(Buttons[1].Pos.X + 20, Buttons[1].Pos.Y + 20), Color.Black);
             }
 
             spriteBatch.DrawString(Font, $"{Money}", new Vector2(MoneyIMG.Pos.X + 50, MoneyIMG.Pos.Y + 20), Color.Black);
@@ -120,15 +119,12 @@ namespace TowerDefense
             for (int i = 0; i < Bloons.Count; i++)
             {
                 spriteBatch.Draw(Bloons[i].Tex, Bloons[i].Pos, Bloons[i].Color);
+                spriteBatch.Draw(IscariotBloon.Tex, IscariotBloon.Pos, IscariotBloon.Color);
+                //IscariotBloon.Draw(spriteBatch);
             }
             spriteBatch.DrawRectangle(SelectedMonkey.Hitbox, Color.Black, 1, 0);
 
-            for (int i = 0; i < Buttons.Count; i++)
-            {
-                Buttons[i].Draw(spriteBatch);
-            }
 
-            IscariotBloon.Draw(spriteBatch);
             DrawProjectiles();
         }
 
@@ -181,6 +177,7 @@ namespace TowerDefense
             for (int i = 0; i < Bloons.Count; i++)
             {
                 Bloons[i].Update(gameTime);
+                IscariotBloon.Update(gameTime);
             }
 
             Player.CheckKill(ref Bloons);
@@ -193,7 +190,7 @@ namespace TowerDefense
                 }
             }
 
-            IscariotBloon.Update(gameTime);
+          
 
             //killing = MonkeyKill(Monkeys, killing);
 
@@ -219,7 +216,7 @@ namespace TowerDefense
         {
             if (SelectedMonkey != Monkeys[0])
             {
-                if (Monkeys.Contains(SelectedMonkey) && Monkeys.Count > 0 && SelectedMonkey.Level < 5 && !dragging)
+                if (Monkeys.Contains(SelectedMonkey) && Monkeys.Count > 0 && SelectedMonkey.Level < 5 && !dragging && Money >= 100)
                 {
                     SelectedMonkey.DmgMultiplier++;
                     Money -= 100;
@@ -227,8 +224,6 @@ namespace TowerDefense
                     PlayerManager.UpgradeDot(SelectedMonkey);
                 }
             }
-
-
         }
 
         void PlaceMonke()
@@ -259,8 +254,8 @@ namespace TowerDefense
                     illegalPos = true;
                 }
             }
-
         }
+
         //public static bool MonkeyKill(List<Player> monkeys, bool killing)
         //{
         //    if (killing) return true;

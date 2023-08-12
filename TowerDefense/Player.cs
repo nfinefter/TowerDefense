@@ -38,7 +38,7 @@ namespace TowerDefense
             if (!Placed) return;
 
             base.Update(time);
-
+            Console.WriteLine(shootWait);
             shootWait += time.ElapsedGameTime;
             
             if (shootWait > shootTime)
@@ -51,7 +51,6 @@ namespace TowerDefense
             {
                 if (projectiles[i].ThrownFrom == this)
                 {
-
                     double yLength = Math.Sin(projectiles[i].Rotation) * 20;
                     double xLength = Math.Cos(projectiles[i].Rotation) * 20;
 

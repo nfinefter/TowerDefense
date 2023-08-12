@@ -32,7 +32,6 @@ namespace TowerDefense
         int draws = 0;
         GameScreen Game = new GameScreen();
         MenuScreen Menu = new MenuScreen();
-        public Rectangle Start;
 
         int moneyHealthSizer = 50;
         int moneyHealthRightScreenBuffer = 250;
@@ -87,14 +86,14 @@ namespace TowerDefense
             Button sellButton = new Button(pixel, new Rectangle(Game.MoneyIMG.Pos.X + 10, GraphicsDevice.Viewport.Height - 60, 110, 50), Color.Red, 0, default, Game.Sell);
             Button upgradeButton = new Button(pixel, new Rectangle(sellButton.Pos.X + 120, GraphicsDevice.Viewport.Height - 60, 110, 50), Color.Green, 0, default, Game.Upgrade);
             Game.Saint = new Player(Game.JesusImage, new Rectangle(GraphicsDevice.Viewport.Width - 200, 200, 100, 100), Color.White, 0, new Vector2(Game.JesusImage.Width / 2, Game.JesusImage.Height / 2), Game.MonkeySource, 0, 0, 5, 25); ;
-            Game.Bloons.Add(new Enemy(Game.BloonImage, Start, Color.Red, 0, new Vector2(Game.BloonImage.Width / 2, Game.BloonImage.Height / 2), 0, GameScreen.Path, 5));
-            Game.Bloons.Add(new Enemy(Game.BloonImage, Start, Color.Red, 0, new Vector2(Game.BloonImage.Width / 2, Game.BloonImage.Height / 2), 0, GameScreen.Path, 3));
-            Game.Bloons.Add(new Enemy(Game.BloonImage, Start, Color.Red, 0, new Vector2(Game.BloonImage.Width / 2, Game.BloonImage.Height / 2), 0, GameScreen.Path, 2));
-            Game.Bloons.Add(new Enemy(Game.BloonImage, Start, Color.Red, 0, new Vector2(Game.BloonImage.Width / 2, Game.BloonImage.Height / 2), 0, GameScreen.Path, 1));
+            Game.Bloons.Add(new Enemy(Game.BloonImage, GameScreen.Start, Color.Red, 0, new Vector2(Game.BloonImage.Width / 2, Game.BloonImage.Height / 2), 0, GameScreen.Path, 5));
+            Game.Bloons.Add(new Enemy(Game.BloonImage, GameScreen.Start, Color.Red, 0, new Vector2(Game.BloonImage.Width / 2, Game.BloonImage.Height / 2), 0, GameScreen.Path, 3));
+            Game.Bloons.Add(new Enemy(Game.BloonImage, GameScreen.Start, Color.Red, 0, new Vector2(Game.BloonImage.Width / 2, Game.BloonImage.Height / 2), 0, GameScreen.Path, 2));
+            Game.Bloons.Add(new Enemy(Game.BloonImage, GameScreen.Start, Color.Red, 0, new Vector2(Game.BloonImage.Width / 2, Game.BloonImage.Height / 2), 0, GameScreen.Path, 1));
             GameScreen.Monkeys.Add(new Player(Game.JesusImage, new Rectangle(GraphicsDevice.Viewport.Width - 200, 200, 100, 100), Color.White, 0, new Vector2(Game.JesusImage.Width / 2, Game.JesusImage.Height / 2), Game.MonkeySource, 0, 0, 5, 25));
             Game.SelectedMonkey = GameScreen.Monkeys[0];
 
-            Game.IscariotBloon = new KillerEnemy(Game.BloonImage, new Rectangle(GameX, GameY, (GameX + GameWidth) / 2, (GameY + GameHeight) / 2), Color.Purple, 0, new Vector2(Game.BloonImage.Width / 2, Game.BloonImage.Height / 2), 0, 0);
+            Game.IscariotBloon = new KillerEnemy(Game.BloonImage, GameScreen.Start, Color.Purple, 0, new Vector2(Game.BloonImage.Width , Game.BloonImage.Height ), 0, GameScreen.Path, 0);
 
             Menu.Sprites.Add(Game.MoneyIMG);
             Menu.Sprites.Add(Game.HealthIMG);
@@ -134,11 +133,6 @@ namespace TowerDefense
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-
-            if (ScreenManager.Instance.CurrentScreen == Game)
-            {
-                Game.Update(gameTime);
-            }
             #region no
 
             //currState = Mouse.GetState().LeftButton;
@@ -199,8 +193,6 @@ namespace TowerDefense
             //    dragging = false;
             //    monkeys[monkeys.Count - 1].Placed = true;
             //}
-
-            ScreenManager.Instance.Update(gameTime);
 
             base.Update(gameTime);
         }

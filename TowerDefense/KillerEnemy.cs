@@ -11,15 +11,12 @@ namespace TowerDefense
 {
     public sealed class KillerEnemy : EnemyBase
     {
-        public int AtkDelay = 500;
-
-        bool Display = false;
+        public int AtkDelay = 200;
         public override Vector2 Origin => Vector2.Zero;
 
-        public override Rectangle? SourceRectangle => new Rectangle(0, 0, 0, 0);
-
-        public KillerEnemy(Texture2D tex, Rectangle pos, Color color, float rotation, Vector2 origin, int difficulty, int rank)
-            : base(tex, pos, color, rotation, origin, difficulty, rank)
+        public override Rectangle? SourceRectangle => null;
+        public KillerEnemy(Texture2D tex, Rectangle pos, Color color, float rotation, Vector2 origin, int difficulty, List<Vertex<System.Drawing.Point>> path, int rank)
+            : base(tex, pos, color, rotation, origin, difficulty, path, rank)
         {
 
         }
@@ -37,21 +34,20 @@ namespace TowerDefense
                     KillMonkey(i);
                 }
             }
+            base.Update(gameTime);
         }
 
         public void KillMonkey(int index)
         {
             ProjectileRemover(GameScreen.Monkeys[index]);
             GameScreen.Monkeys.RemoveAt(index);
-            Display = !Display;
         }
         public override void Draw(SpriteBatch spriteBatch)
         {
-            if (Display)
-            {
-                spriteBatch.Draw(Tex, Pos, SourceRectangle, Color, Rotation, Origin, SpriteEffects.None, 0);
-                Display = !Display;
-            }
+            if (PathPosition >= Path.Count - 1) return;
+
+            base.Draw(spriteBatch);
+            
         }
 
 
