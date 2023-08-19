@@ -10,7 +10,8 @@ namespace TowerDefense
 {
     public static class EnemyManager
     {
-        public static bool IsAttacked(Enemy enemy)
+        public static int JudisSpawnDelay = 200;
+        public static bool IsAttacked(EnemyBase enemy)
         {
             if (enemy.PathPosition + 1 == enemy.Path.Count)
             {
@@ -19,7 +20,7 @@ namespace TowerDefense
             }
             return false;
         }
-        public static void RankCheck(Enemy enemy)
+        public static void RankCheck(EnemyBase enemy)
         {
             if (enemy.Rank == 1)
             {
@@ -51,6 +52,12 @@ namespace TowerDefense
                 enemy.Color = Color.Black;
                 enemy.Speed = 600;
             }
+            else if (enemy.Rank == 10)
+            {
+                enemy.Color = Color.Purple;
+                enemy.Speed = 1000;
+               
+            }
         }
         static TimeSpan moveTime = TimeSpan.FromSeconds(1);
         static TimeSpan moveWait;
@@ -58,7 +65,7 @@ namespace TowerDefense
         static int max = 10;
         static int minRank = 1;
 
-        public static void EnemyCreate(GameTime time, ref List<Enemy> bloons)
+        public static void EnemyCreate(GameTime time, ref List<EnemyBase> bloons)
         {
             Random rand = new Random();
 
@@ -68,7 +75,8 @@ namespace TowerDefense
 
             if (moveWait > moveTime - spawnSpeed)
             {
-                bloons.Add(new Enemy(ContentManager.Instance[Textures.Bloon], GameScreen.Start, Color.White, 0, new Vector2(ContentManager.Instance[Textures.Bloon].Width / 2, ContentManager.Instance[Textures.Bloon].Height / 2), 0, GameScreen.Path, rand.Next(minRank, 7)));
+                JudisCreation(ref bloons);
+                bloons.Add(new Enemy(ContentManager.Instance[Textures.Bloon], GameScreen.Start, Color.White, 0, Vector2.Zero, 0, GameScreen.Path, rand.Next(minRank, 7)));
                 min += 1;
                 max += 1;
                 moveWait = TimeSpan.Zero;
@@ -77,8 +85,15 @@ namespace TowerDefense
             {
                 minRank++;
             }
+        }
+        public static void JudisCreation(ref List<EnemyBase> bloons)
+        {
+            Random rand = new Random();
 
-
+            if (GameScreen.Monkeys.Count > 1) //&& rand.Next(1, JudisSpawnDelay) == 100)
+            {
+                bloons.Add(new KillerEnemy(ContentManager.Instance[Textures.Bloon], GameScreen.Start, Color.Purple, 0, Vector2.Zero, 0, GameScreen.Path, 10));
+            }
         }
     }
 }

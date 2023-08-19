@@ -11,9 +11,10 @@ namespace TowerDefense
 {
     public sealed class KillerEnemy : EnemyBase
     {
-        public int AtkDelay = 200;
-        public override Vector2 Origin => Vector2.Zero;
 
+        public int AtkDelay = 2000;
+        public override Vector2 Origin => Vector2.Zero;
+        public bool DrawPope = false;
         public override Rectangle? SourceRectangle => null;
         public KillerEnemy(Texture2D tex, Rectangle pos, Color color, float rotation, Vector2 origin, int difficulty, List<Vertex<System.Drawing.Point>> path, int rank)
             : base(tex, pos, color, rotation, origin, difficulty, path, rank)
@@ -32,6 +33,7 @@ namespace TowerDefense
                 if (GameScreen.Monkeys[i].Placed)
                 {
                     KillMonkey(i);
+                    DrawPope = true;
                 }
             }
             base.Update(gameTime);
@@ -46,10 +48,15 @@ namespace TowerDefense
         {
             if (PathPosition >= Path.Count - 1) return;
 
+            if (DrawPope)
+            {
+                spriteBatch.Draw(ContentManager.Instance[Textures.PopeSoldier], new Rectangle(0, 0, ContentManager.Instance[Textures.PopeSoldier].Width, ContentManager.Instance[Textures.PopeSoldier].Height), Color.White);
+                DrawPope = !DrawPope;
+            }
+
             base.Draw(spriteBatch);
             
         }
-
 
     }
 }

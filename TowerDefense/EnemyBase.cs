@@ -55,8 +55,7 @@ namespace TowerDefense
 
                 moveWait = TimeSpan.Zero;
             }
-
-
         }
+
     }
 }

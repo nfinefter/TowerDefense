@@ -27,9 +27,9 @@ namespace TowerDefense
     public class GameScreen : Screen
     {
         public static List<Player> Monkeys = new List<Player>();
-        public List<Enemy> Bloons = new List<Enemy>();
+        public List<EnemyBase> Bloons = new List<EnemyBase>();
 
-        public KillerEnemy IscariotBloon;
+        //public KillerEnemy IscariotBloon;
         public Player SelectedMonkey;
 
         public static int size = 40;
@@ -40,6 +40,7 @@ namespace TowerDefense
         public Texture2D JesusImage;
         public Texture2D BloonImage;
         public Texture2D DartImage;
+        public Texture2D PopeSoldierImage;
         public Sprite MoneyIMG;
         public Sprite HealthIMG;
         public List<Rectangle> MonkeySource;
@@ -77,6 +78,7 @@ namespace TowerDefense
                     Player.projectiles[i].Rotation += 90;
                 }
             }
+            
             for (int i = 0; i < Sprites.Count; i++)
             {
                 Sprites[i].Draw(spriteBatch);
@@ -118,9 +120,8 @@ namespace TowerDefense
 
             for (int i = 0; i < Bloons.Count; i++)
             {
-                spriteBatch.Draw(Bloons[i].Tex, Bloons[i].Pos, Bloons[i].Color);
-                spriteBatch.Draw(IscariotBloon.Tex, IscariotBloon.Pos, IscariotBloon.Color);
-                //IscariotBloon.Draw(spriteBatch);
+                //spriteBatch.Draw(Bloons[i].Tex, Bloons[i].Pos, Bloons[i].Color);
+                Bloons[i].Draw(spriteBatch);
             }
             spriteBatch.DrawRectangle(SelectedMonkey.Hitbox, Color.Black, 1, 0);
 
@@ -177,7 +178,7 @@ namespace TowerDefense
             for (int i = 0; i < Bloons.Count; i++)
             {
                 Bloons[i].Update(gameTime);
-                IscariotBloon.Update(gameTime);
+                //IscariotBloon.Update(gameTime);
             }
 
             Player.CheckKill(ref Bloons);

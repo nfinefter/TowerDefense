@@ -64,10 +64,12 @@ namespace TowerDefense
             Game.DartImage = Content.Load<Texture2D>("Dart");
             Game.JesusImage = Content.Load<Texture2D>("DartMnokeySpriteSheetEdited");
             Game.BloonImage = Content.Load<Texture2D>("balloon");
+            Game.PopeSoldierImage = Content.Load<Texture2D>("PopeSoldier");
 
             ContentManager.Instance[Textures.Dart] = Game.DartImage;
             ContentManager.Instance[Textures.Jesus] = Game.JesusImage;
             ContentManager.Instance[Textures.Bloon] = Game.BloonImage;
+            ContentManager.Instance[Textures.PopeSoldier] = Game.PopeSoldierImage;
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
@@ -86,14 +88,10 @@ namespace TowerDefense
             Button sellButton = new Button(pixel, new Rectangle(Game.MoneyIMG.Pos.X + 10, GraphicsDevice.Viewport.Height - 60, 110, 50), Color.Red, 0, default, Game.Sell);
             Button upgradeButton = new Button(pixel, new Rectangle(sellButton.Pos.X + 120, GraphicsDevice.Viewport.Height - 60, 110, 50), Color.Green, 0, default, Game.Upgrade);
             Game.Saint = new Player(Game.JesusImage, new Rectangle(GraphicsDevice.Viewport.Width - 200, 200, 100, 100), Color.White, 0, new Vector2(Game.JesusImage.Width / 2, Game.JesusImage.Height / 2), Game.MonkeySource, 0, 0, 5, 25); ;
-            Game.Bloons.Add(new Enemy(Game.BloonImage, GameScreen.Start, Color.Red, 0, new Vector2(Game.BloonImage.Width / 2, Game.BloonImage.Height / 2), 0, GameScreen.Path, 5));
-            Game.Bloons.Add(new Enemy(Game.BloonImage, GameScreen.Start, Color.Red, 0, new Vector2(Game.BloonImage.Width / 2, Game.BloonImage.Height / 2), 0, GameScreen.Path, 3));
-            Game.Bloons.Add(new Enemy(Game.BloonImage, GameScreen.Start, Color.Red, 0, new Vector2(Game.BloonImage.Width / 2, Game.BloonImage.Height / 2), 0, GameScreen.Path, 2));
-            Game.Bloons.Add(new Enemy(Game.BloonImage, GameScreen.Start, Color.Red, 0, new Vector2(Game.BloonImage.Width / 2, Game.BloonImage.Height / 2), 0, GameScreen.Path, 1));
             GameScreen.Monkeys.Add(new Player(Game.JesusImage, new Rectangle(GraphicsDevice.Viewport.Width - 200, 200, 100, 100), Color.White, 0, new Vector2(Game.JesusImage.Width / 2, Game.JesusImage.Height / 2), Game.MonkeySource, 0, 0, 5, 25));
             Game.SelectedMonkey = GameScreen.Monkeys[0];
 
-            Game.IscariotBloon = new KillerEnemy(Game.BloonImage, GameScreen.Start, Color.Purple, 0, new Vector2(Game.BloonImage.Width , Game.BloonImage.Height ), 0, GameScreen.Path, 0);
+            //Game.IscariotBloon = new KillerEnemy(Game.BloonImage, GameScreen.Start, Color.Purple, 0, new Vector2(Game.BloonImage.Width , Game.BloonImage.Height ), 0, GameScreen.Path, 0);
 
             Menu.Sprites.Add(Game.MoneyIMG);
             Menu.Sprites.Add(Game.HealthIMG);

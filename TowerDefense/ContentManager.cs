@@ -12,7 +12,8 @@ namespace TowerDefense
     {
         Dart,
         Jesus,
-        Bloon
+        Bloon,
+        PopeSoldier
     }
     internal class ContentManager
     {

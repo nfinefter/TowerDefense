@@ -18,7 +18,7 @@ namespace TowerDefense
 
         public Sprite Dot;
 
-        private Enemy Target;
+        private EnemyBase Target;
 
         public static List<Projectile> projectiles = new List<Projectile>();
 
@@ -77,7 +77,7 @@ namespace TowerDefense
             return new Projectile(manager[Textures.Dart], Pos, Color.Black, rotation, Vector2.Zero, Damage, 20, this);
         }
 
-        public void FindTarget(List<Enemy> enemies)
+        public void FindTarget(List<EnemyBase> enemies)
         {
             if (!Placed) return;
 
@@ -102,7 +102,7 @@ namespace TowerDefense
             }
             Target = enemies[index];
         }
-        public static void CheckKill(ref List<Enemy> enemies)
+        public static void CheckKill(ref List<EnemyBase> enemies)
         {
             for (int i = 0; i < projectiles.Count; i++)
             {
@@ -114,11 +114,17 @@ namespace TowerDefense
 
                         GameScreen.Money += ((float)enemies[j].Rank/ 5f);
 
+                        projectiles.RemoveAt(i);
+
+                        if (enemies[j].Rank == 10)
+                        {
+                            enemies.RemoveAt(j);
+                            return;
+                        }
+
                         enemies[j].Rank--;
 
                         EnemyManager.RankCheck(enemies[j]);
-
-                        projectiles.RemoveAt(i);
 
                         if (enemies[j].Rank <= 0)
                         {
