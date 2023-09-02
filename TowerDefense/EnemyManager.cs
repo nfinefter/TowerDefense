@@ -10,7 +10,7 @@ namespace TowerDefense
 {
     public static class EnemyManager
     {
-        public static int JudisSpawnDelay = 200;
+        public static int JudisSpawnDelay = 10;
         public static bool IsAttacked(EnemyBase enemy)
         {
             if (enemy.PathPosition + 1 == enemy.Path.Count)
@@ -90,7 +90,7 @@ namespace TowerDefense
         {
             Random rand = new Random();
 
-            if (GameScreen.Monkeys.Count > 1) //&& rand.Next(1, JudisSpawnDelay) == 100)
+            if (GameScreen.Monkeys.Count > 1 && rand.Next(1, JudisSpawnDelay) == 5)
             {
                 bloons.Add(new KillerEnemy(ContentManager.Instance[Textures.Bloon], GameScreen.Start, Color.Purple, 0, Vector2.Zero, 0, GameScreen.Path, 10));
             }

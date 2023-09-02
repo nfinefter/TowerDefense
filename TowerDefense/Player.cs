@@ -58,9 +58,6 @@ namespace TowerDefense
                     projectiles[i].Pos.Y += (int)yLength;
                 }
             }
-
-            
-
         }
         public Projectile AddProjectile()
         {

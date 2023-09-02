@@ -11,7 +11,8 @@ namespace TowerDefense
 {
     public sealed class KillerEnemy : EnemyBase
     {
-
+        public int DrawDelay = 20;
+        public int DrawCounter = 0;
         public int AtkDelay = 2000;
         public override Vector2 Origin => Vector2.Zero;
         public bool DrawPope = false;
@@ -48,10 +49,15 @@ namespace TowerDefense
         {
             if (PathPosition >= Path.Count - 1) return;
 
-            if (DrawPope)
+            if (DrawPope && DrawCounter <= DrawDelay)
             {
+                DrawCounter++;
                 spriteBatch.Draw(ContentManager.Instance[Textures.PopeSoldier], new Rectangle(0, 0, ContentManager.Instance[Textures.PopeSoldier].Width, ContentManager.Instance[Textures.PopeSoldier].Height), Color.White);
-                DrawPope = !DrawPope;
+            }
+            else
+            {
+                DrawCounter = 0;
+                DrawPope = false;
             }
 
             base.Draw(spriteBatch);
