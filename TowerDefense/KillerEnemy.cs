@@ -42,7 +42,6 @@ namespace TowerDefense
 
         public void KillMonkey(int index)
         {
-            ProjectileRemover(GameScreen.Monkeys[index]);
             GameScreen.Monkeys.RemoveAt(index);
         }
         public override void Draw(SpriteBatch spriteBatch)

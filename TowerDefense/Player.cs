@@ -43,24 +43,18 @@ namespace TowerDefense
             
             if (shootWait > shootTime)
             {
-                projectiles.Add(AddProjectile());
+                AddProjectile();
 
                 shootWait = TimeSpan.Zero;
             }
-            for (int i = 0; i < projectiles.Count; i++)
-            {
-                if (projectiles[i].ThrownFrom == this)
-                {
-                    double yLength = Math.Sin(projectiles[i].Rotation) * 20;
-                    double xLength = Math.Cos(projectiles[i].Rotation) * 20;
-
-                    projectiles[i].Pos.X += (int)xLength;
-                    projectiles[i].Pos.Y += (int)yLength;
-                }
-            }
         }
-        public Projectile AddProjectile()
+        public void AddProjectile()
         {
+            if (Target == null)
+            {
+                return;
+            }
+
             ContentManager manager = ContentManager.Instance;
 
             float offset = 0;
@@ -71,7 +65,7 @@ namespace TowerDefense
 
             float rotation = MathF.Atan2(Target.Pos.Y - Pos.Y, Target.Pos.X + offset - Pos.X); 
 
-            return new Projectile(manager[Textures.Dart], Pos, Color.Black, rotation, Vector2.Zero, Damage, 20, this);
+            projectiles.Add(new Projectile(manager[Textures.Dart], Pos, Color.Black, rotation, Vector2.Zero, Damage, 20, this));
         }
 
         public void FindTarget(List<EnemyBase> enemies)
@@ -80,6 +74,7 @@ namespace TowerDefense
 
             if (enemies.Count == 0)
             {
+                Target = null;
                 //Win;
                 return;
             }

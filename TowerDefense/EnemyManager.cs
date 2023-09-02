@@ -59,7 +59,8 @@ namespace TowerDefense
                
             }
         }
-        static TimeSpan moveTime = TimeSpan.FromSeconds(1);
+
+        static TimeSpan moveTime = TimeSpan.FromSeconds(10);
         static TimeSpan moveWait;
         static int min = 1;
         static int max = 10;
@@ -70,7 +71,6 @@ namespace TowerDefense
             Random rand = new Random();
 
             TimeSpan spawnSpeed = TimeSpan.FromMilliseconds(rand.Next(min, max));
-
             moveWait += time.ElapsedGameTime;
 
             if (moveWait > moveTime - spawnSpeed)

@@ -12,7 +12,6 @@ namespace TowerDefense
     public sealed class Projectile : ProjectileBase
     {
         private Rectangle? sourceRectangle = null;
-
         public override Rectangle? SourceRectangle => sourceRectangle;
 
         private Vector2 origin;
@@ -25,7 +24,16 @@ namespace TowerDefense
 
         public override void Update(GameTime gameTime)
         {
-            throw new Exception();
+            if (Pos.X  < 0 || Pos.Y < 0 || Pos.X > GameScreen.GameDimensions.X + GameScreen.GameDimensions.Width|| Pos.Y > GameScreen.GameDimensions.Y + GameScreen.GameDimensions.Height)
+            {
+                Player.projectiles.Remove(this);
+            }
+
+            double yLength = Math.Sin(Rotation) * 20;
+            double xLength = Math.Cos(Rotation) * 20;
+
+            Pos.X += (int)xLength;
+            Pos.Y += (int)yLength;
         }
 
         public void DamageCalc()

@@ -57,20 +57,8 @@ namespace TowerDefense
 
             return images;
         }
-        public static void ProjectileRemover(Player selectedMonkey)
-        {
-
-            for (int i = 0; i < Player.projectiles.Count; i++)
-            {
-                if (Player.projectiles[i].ThrownFrom == selectedMonkey)
-                {
-                    Player.projectiles.RemoveAt(i);
-                }
-            }
         }
 
       
     }
-
-}
 

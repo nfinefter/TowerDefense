@@ -47,7 +47,7 @@ namespace TowerDefense
         public Player Saint;
         bool illegalPos = false;
         public static List<Vertex<System.Drawing.Point>> Path = new List<Vertex<System.Drawing.Point>>();
-        public Rectangle GameDimensions;
+        public static Rectangle GameDimensions;
         int pathDrawDelay = 0;
         public static Rectangle Start;
         public SpriteFont Font;
@@ -183,6 +183,17 @@ namespace TowerDefense
 
             Player.CheckKill(ref Bloons);
 
+            Func<Projectile, bool> dartPredicate = m =>
+            {
+                var bloonCount = Bloons.Count;
+                Player.CheckKill(ref Bloons);
+                if (bloonCount > Bloons.Count)
+                {
+                    return true;
+                }
+                return false;
+            };
+             
             for (int i = 0; i < Bloons.Count; i++)
             {
                 if (EnemyManager.IsAttacked(Bloons[i]))
@@ -190,7 +201,10 @@ namespace TowerDefense
                     Bloons.RemoveAt(i);
                 }
             }
-
+            for (int i = 0; i < Player.projectiles.Count; i++)
+            {
+                Player.projectiles[i].Update(gameTime);
+            }
           
 
             //killing = MonkeyKill(Monkeys, killing);
@@ -204,7 +218,6 @@ namespace TowerDefense
         {
             if (Monkeys.Contains(SelectedMonkey) && Monkeys.Count > 1)
             {
-                ProjectileRemover(SelectedMonkey);
                 if (SelectedMonkey.Pos != Saint.Pos && !dragging)
                 {
                     Monkeys.Remove(SelectedMonkey);
