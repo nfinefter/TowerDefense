@@ -3,11 +3,8 @@ using Microsoft.Xna.Framework.Graphics;
 
 using System;
 using System.Collections.Generic;
-using System.Data.SqlTypes;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+using static TowerDefense.GameScreen;
 
 namespace TowerDefense
 {
@@ -48,6 +45,28 @@ namespace TowerDefense
                 shootWait = TimeSpan.Zero;
             }
         }
+        public bool DartPredicate(Projectile me)
+        {
+            if (me.Pos.X < 0 || me.Pos.Y < 0 || me.Pos.X > GameDimensions.X + GameDimensions.Width || me.Pos.Y > GameDimensions.Y + GameDimensions.Height) return true;
+
+            for (int i = 0; i < Bloons.Count; i++)
+            {
+                if (me.Pos.Intersects(Bloons[i].Pos))
+                {
+                    Money += Bloons[i].Rank / 5f;
+                    if (Bloons[i].Rank == 10 || Bloons[i].Rank  <= 1)
+                    {
+                        Bloons.RemoveAt(i);
+                        return true;
+                    }
+                    Bloons[i].Rank--;
+                    EnemyManager.RankCheck(Bloons[i]);
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public void AddProjectile()
         {
             if (Target == null)
@@ -65,7 +84,7 @@ namespace TowerDefense
 
             float rotation = MathF.Atan2(Target.Pos.Y - Pos.Y, Target.Pos.X + offset - Pos.X); 
 
-            projectiles.Add(new Projectile(manager[Textures.Dart], Pos, Color.Black, rotation, Vector2.Zero, Damage, 20, this));
+            projectiles.Add(new Projectile(manager[Textures.Dart], Pos, Color.Black, rotation, Vector2.Zero, Damage, 20, this, DartPredicate));
         }
 
         public void FindTarget(List<EnemyBase> enemies)

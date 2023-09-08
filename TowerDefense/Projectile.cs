@@ -15,16 +15,25 @@ namespace TowerDefense
         public override Rectangle? SourceRectangle => sourceRectangle;
 
         private Vector2 origin;
+
+        Predicate<Projectile> predicate;
+
         public override Vector2 Origin => origin;
-        public Projectile(Texture2D tex, Rectangle pos, Color color, float rotation, Vector2 origin, int damage, double speed, Player thrownFrom)
+        public Projectile(Texture2D tex, Rectangle pos, Color color, float rotation, Vector2 origin, int damage, double speed, Player thrownFrom, Predicate<Projectile> predicate)
             : base(tex, pos, color, rotation, origin, damage, speed, thrownFrom)
         {
             this.origin = origin;
+            this.predicate = predicate;
         }
 
         public override void Update(GameTime gameTime)
         {
-            if (Pos.X  < 0 || Pos.Y < 0 || Pos.X > GameScreen.GameDimensions.X + GameScreen.GameDimensions.Width|| Pos.Y > GameScreen.GameDimensions.Y + GameScreen.GameDimensions.Height)
+            //if (Pos.X  < 0 || Pos.Y < 0 || Pos.X > GameScreen.GameDimensions.X + GameScreen.GameDimensions.Width|| Pos.Y > GameScreen.GameDimensions.Y + GameScreen.GameDimensions.Height)
+            //{
+            //    Player.projectiles.Remove(this);
+            //}
+
+            if (predicate(this))
             {
                 Player.projectiles.Remove(this);
             }

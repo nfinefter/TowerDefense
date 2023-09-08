@@ -14,7 +14,7 @@ namespace TowerDefense
         public override void Draw(SpriteBatch spriteBatch)
         {
             throw new NotImplementedException();
-        }        
+        }
         public override Screenum Update(GameTime gameTime)
         {
             if (Buttons[0].Pos.Contains(Mouse.GetState().Position) && ScreenManager.Instance.CurrentState == ButtonState.Pressed && ScreenManager.Instance.PrevState == ButtonState.Released)
@@ -27,7 +27,7 @@ namespace TowerDefense
     public class GameScreen : Screen
     {
         public static List<Player> Monkeys = new List<Player>();
-        public List<EnemyBase> Bloons = new List<EnemyBase>();
+        public static List<EnemyBase> Bloons = new List<EnemyBase>();
 
         //public KillerEnemy IscariotBloon;
         public Player SelectedMonkey;
@@ -55,6 +55,8 @@ namespace TowerDefense
         public int MapXBorder;
         public Map map = new Map();
 
+       
+
         public void Initialize()
         {
             MapXBorder = Game1.GameWidth - 250;
@@ -78,7 +80,7 @@ namespace TowerDefense
                     Player.projectiles[i].Rotation += 90;
                 }
             }
-            
+
             for (int i = 0; i < Sprites.Count; i++)
             {
                 Sprites[i].Draw(spriteBatch);
@@ -128,6 +130,7 @@ namespace TowerDefense
 
             DrawProjectiles();
         }
+
 
         public override Screenum Update(GameTime gameTime)
         {
@@ -181,31 +184,31 @@ namespace TowerDefense
                 //IscariotBloon.Update(gameTime);
             }
 
-            Player.CheckKill(ref Bloons);
+            //Player.CheckKill(ref Bloons);
 
-            Func<Projectile, bool> dartPredicate = m =>
-            {
-                var bloonCount = Bloons.Count;
-                Player.CheckKill(ref Bloons);
-                if (bloonCount > Bloons.Count)
-                {
-                    return true;
-                }
-                return false;
-            };
-             
-            for (int i = 0; i < Bloons.Count; i++)
-            {
-                if (EnemyManager.IsAttacked(Bloons[i]))
-                {
-                    Bloons.RemoveAt(i);
-                }
-            }
+            //Func<Projectile, bool> dartPredicate = m =>
+            //{
+            //    var bloonCount = Bloons.Count;
+            //    Player.CheckKill(ref Bloons);
+            //    if (bloonCount > Bloons.Count)
+            //    {
+            //        return true;
+            //    }
+            //    return false;
+            //};
+
+            //for (int i = 0; i < Bloons.Count; i++)
+            //{
+            //    if (EnemyManager.IsAttacked(Bloons[i]))
+            //    {
+            //        Bloons.RemoveAt(i);
+            //    }
+            //}
             for (int i = 0; i < Player.projectiles.Count; i++)
             {
                 Player.projectiles[i].Update(gameTime);
             }
-          
+
 
             //killing = MonkeyKill(Monkeys, killing);
 

@@ -56,11 +56,10 @@ namespace TowerDefense
             {
                 enemy.Color = Color.Purple;
                 enemy.Speed = 1000;
-               
-            }
+            }//cry
         }
 
-        static TimeSpan moveTime = TimeSpan.FromSeconds(10);
+        static TimeSpan moveTime = TimeSpan.FromSeconds(1);
         static TimeSpan moveWait;
         static int min = 1;
         static int max = 10;

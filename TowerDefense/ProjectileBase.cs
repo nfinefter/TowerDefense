@@ -26,12 +26,11 @@ namespace TowerDefense
         }
 
         public Player ThrownFrom;
-        protected ProjectileBase(Texture2D tex, Rectangle pos, Color color, float rotation, Vector2 origin, int damage, double speed, Player thrownFrom)
+        protected ProjectileBase(Texture2D tex, Rectangle pos, Color color, float rotation, Vector2 origin, int damage, double speed)
             : base(tex, pos, color, rotation)
         {
             Damage = damage;
             Speed = speed;
-            ThrownFrom = thrownFrom;
         }
 
         public static double FindingTime(Vector2 pos1, Vector2 pos2, double idealSpeed)
