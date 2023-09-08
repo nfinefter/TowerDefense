@@ -12,7 +12,7 @@ namespace TowerDefense
 {
     public sealed class KillerEnemy : EnemyBase
     {
-        public int DrawDelay = 20;
+        public int DrawDelay = 50;
         public int DrawCounter = 0;
         public int AtkDelay = 2000;
 
@@ -83,7 +83,26 @@ namespace TowerDefense
         }
         public void KillMonkey(int index)
         {
-            GameScreen.Monkeys.RemoveAt(index);
+            Monkeys.RemoveAt(index);
+        }
+        public void AddProjectile()
+        {
+            if (Target == null)
+            {
+                return;
+            }
+
+            ContentManager manager = ContentManager.Instance;
+
+            float offset = 0;
+            if (Pos.X == Target.Pos.X)
+            {
+                offset = .1f;
+            }
+
+            float rotation = MathF.Atan2(Target.Pos.Y - Pos.Y, Target.Pos.X + offset - Pos.X);
+
+            projectiles.Add(new Projectile(manager[Textures.Dart], Pos, Color.Black, rotation, Vector2.Zero, Damage, 20, this, DartPredicate));
         }
         public override void Draw(SpriteBatch spriteBatch)
         {
@@ -94,6 +113,9 @@ namespace TowerDefense
                 DrawCounter++;
                 spriteBatch.Draw(ContentManager.Instance[Textures.PopeSoldier], new Rectangle(0, 0, ContentManager.Instance[Textures.PopeSoldier].Width, ContentManager.Instance[Textures.PopeSoldier].Height), Color.White);
             }
+
+
+
             else
             {
                 DrawCounter = 0;

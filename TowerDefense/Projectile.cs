@@ -19,8 +19,8 @@ namespace TowerDefense
         Predicate<Projectile> predicate;
 
         public override Vector2 Origin => origin;
-        public Projectile(Texture2D tex, Rectangle pos, Color color, float rotation, Vector2 origin, int damage, double speed, Player thrownFrom, Predicate<Projectile> predicate)
-            : base(tex, pos, color, rotation, origin, damage, speed, thrownFrom)
+        public Projectile(Texture2D tex, Rectangle pos, Color color, float rotation, Vector2 origin, int damage, double speed, Predicate<Projectile> predicate)
+            : base(tex, pos, color, rotation, origin, damage, speed)
         {
             this.origin = origin;
             this.predicate = predicate;
@@ -45,9 +45,5 @@ namespace TowerDefense
             Pos.Y += (int)yLength;
         }
 
-        public void DamageCalc()
-        {
-            Damage = ThrownFrom.DmgMultiplier * 5;
-        }
     }
 }

@@ -121,8 +121,6 @@ namespace TowerDefense
                 {
                     if (projectiles[i].Pos.Intersects(enemies[j].Pos))
                     {
-                        projectiles[i].DamageCalc();
-
                         GameScreen.Money += ((float)enemies[j].Rank/ 5f);
 
                         projectiles.RemoveAt(i);
