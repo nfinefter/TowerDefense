@@ -20,7 +20,7 @@ namespace HelperLibrary
     {
         Game,
         Menu,
-        Pause,
+        End,
     }
    
 

@@ -25,13 +25,16 @@ namespace TowerDefense
         public static int GameY;
         public static int GameWidth;
         public static int GameHeight;
+        public static Texture2D pixel;
 
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
         int updates = 0;
         int draws = 0;
-        GameScreen Game = new GameScreen();
-        MenuScreen Menu = new MenuScreen();
+
+        GameScreen Game;
+        MenuScreen Menu;
+        EndScreen End;
 
         int moneyHealthSizer = 50;
         int moneyHealthRightScreenBuffer = 250;
@@ -54,10 +57,14 @@ namespace TowerDefense
             graphics.PreferredBackBufferWidth = 1900;
             graphics.ApplyChanges();
 
-            Texture2D pixel = new Texture2D(GraphicsDevice, 1, 1);
+            pixel = new Texture2D(GraphicsDevice, 1, 1);
             pixel.SetData<Color>(new Color[] { Color.White });
 
-            ScreenManager.Instance.Init((Screenum.Game, Game), (Screenum.Menu, Menu));
+            Game = new GameScreen();
+            Menu = new MenuScreen();
+            End = new EndScreen();
+
+            ScreenManager.Instance.Init((Screenum.Game, Game), (Screenum.Menu, Menu), (Screenum.End, End));
 
             ScreenManager.Instance.currentScreen = Screenum.Menu;
 
@@ -80,14 +87,14 @@ namespace TowerDefense
 
             Game.Initialize();
 
-            Game.Font = Content.Load<SpriteFont>("File");
+            GameScreen.Font = Content.Load<SpriteFont>("File");
             Game.MoneyIMG = new Sprite(Content.Load<Texture2D>("money"), new Rectangle(GraphicsDevice.Viewport.Width - moneyHealthRightScreenBuffer, 25, moneyHealthSizer, moneyHealthSizer), Color.Black, 0, Vector2.Zero);
             Game.HealthIMG = new Sprite(Content.Load<Texture2D>("health"), new Rectangle(GraphicsDevice.Viewport.Width - moneyHealthRightScreenBuffer, Game.MoneyIMG.Pos.Height * 2, moneyHealthSizer, moneyHealthSizer), Color.Black, 0, Vector2.Zero);
 
             Game.MonkeySource = SourceRectangleFinder(Game.JesusImage, new Point(6, 1));
             Button sellButton = new Button(pixel, new Rectangle(Game.MoneyIMG.Pos.X + 10, GraphicsDevice.Viewport.Height - 60, 110, 50), Color.Red, 0, default, Game.Sell);
             Button upgradeButton = new Button(pixel, new Rectangle(sellButton.Pos.X + 120, GraphicsDevice.Viewport.Height - 60, 110, 50), Color.Green, 0, default, Game.Upgrade);
-            Game.Saint = new Player(Game.JesusImage, new Rectangle(GraphicsDevice.Viewport.Width - 200, 200, 100, 100), Color.White, 0, new Vector2(Game.JesusImage.Width / 2, Game.JesusImage.Height / 2), Game.MonkeySource, 0, 0, 5, 25); ;
+            GameScreen.Saint = new Player(Game.JesusImage, new Rectangle(GraphicsDevice.Viewport.Width - 200, 200, 100, 100), Color.White, 0, new Vector2(Game.JesusImage.Width / 2, Game.JesusImage.Height / 2), Game.MonkeySource, 0, 0, 5, 25); ;
             GameScreen.Monkeys.Add(new Player(Game.JesusImage, new Rectangle(GraphicsDevice.Viewport.Width - 200, 200, 100, 100), Color.White, 0, new Vector2(Game.JesusImage.Width / 2, Game.JesusImage.Height / 2), Game.MonkeySource, 0, 0, 5, 25));
             Game.SelectedMonkey = GameScreen.Monkeys[0];
 
@@ -102,8 +109,6 @@ namespace TowerDefense
             Game.Sprites.Add(Game.HealthIMG);
             Game.Buttons.Add(sellButton);
             Game.Buttons.Add(upgradeButton);
-
-
 
             base.Initialize();
         }
@@ -303,18 +308,7 @@ namespace TowerDefense
 
             spriteBatch.Begin();
 
-            if (ScreenManager.Instance.CurrentScreen == Menu)
-            {
-                for (int i = 0; i < Menu.Buttons.Count; i++)
-                {
-                    Menu.Buttons[i].Draw(spriteBatch);
-                    //spriteBatch.FillRectangle(Menu.Buttons[i], Color.Black, 0);
-                }
-            }
-
-            if (ScreenManager.Instance.CurrentScreen == Game)
-            {
-                Game.Draw(spriteBatch);
+            ScreenManager.Instance.Draw(spriteBatch);
 
                 //for (int i = 0; i < pathDrawDelay; i++)
                 //{
@@ -358,7 +352,7 @@ namespace TowerDefense
 
                 //DrawProjectiles();
 
-            }
+            
             spriteBatch.End();
 
             base.Draw(gameTime);

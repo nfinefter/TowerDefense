@@ -76,11 +76,14 @@ namespace TowerDefense
             {
                 JudisCreation(ref bloons);
                 bloons.Add(new Enemy(ContentManager.Instance[Textures.Bloon], GameScreen.Start, Color.White, 0, Vector2.Zero, 0, GameScreen.Path, rand.Next(minRank, 7)));
-                min += 1;
-                max += 1;
+                if (rand.Next(0, 5000) == 1)
+                {
+                    min += 1;
+                    max += 1;
+                }
                 moveWait = TimeSpan.Zero;
             }
-            if (bloons.Count % 500 == 0 && minRank <= 5)
+            if (bloons.Count > 1 && bloons.Count % 500 == 0 && minRank <= 5)
             {
                 minRank++;
             }

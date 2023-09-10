@@ -25,7 +25,7 @@ namespace TowerDefense
 
         public bool Placed = false;
         public Player(Texture2D tex, Rectangle pos, Color color, float rotation, Vector2 origin, List<Rectangle> sourceRectangle, int level, int xp, int dmgMultiplier, int range)
-            : base(tex, pos, color, rotation, origin, sourceRectangle, level, xp, dmgMultiplier, range)
+            : base(tex, pos, color, rotation, origin, sourceRectangle, level, xp, range)
         {
             shootWait = TimeSpan.Zero;
         }
@@ -54,12 +54,16 @@ namespace TowerDefense
                 if (me.Pos.Intersects(Bloons[i].Pos))
                 {
                     Money += Bloons[i].Rank / 5f;
-                    if (Bloons[i].Rank == 10 || Bloons[i].Rank  <= 1)
+                    for (int j = 0; j < Damage; j++)
+                    {
+                        Bloons[i].Rank--;
+                    }
+                    if (Bloons[i].Rank == 10 || Bloons[i].Rank  <= 0)
                     {
                         Bloons.RemoveAt(i);
                         return true;
                     }
-                    Bloons[i].Rank--;
+                    
                     EnemyManager.RankCheck(Bloons[i]);
                     return true;
                 }
@@ -84,7 +88,7 @@ namespace TowerDefense
 
             float rotation = MathF.Atan2(Target.Pos.Y - Pos.Y, Target.Pos.X + offset - Pos.X); 
 
-            projectiles.Add(new Projectile(manager[Textures.Dart], Pos, Color.Black, rotation, Vector2.Zero, Damage, 20, this, DartPredicate));
+            projectiles.Add(new Projectile(manager[Textures.Dart], Pos, Color.Black, rotation, Vector2.Zero, Damage, 20, DartPredicate));
         }
 
         public void FindTarget(List<EnemyBase> enemies)

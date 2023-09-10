@@ -15,7 +15,7 @@ namespace TowerDefense
         public int DrawDelay = 50;
         public int DrawCounter = 0;
         public int AtkDelay = 2000;
-
+        bool dartShot = false;
         private Player Target;
         public override Vector2 Origin => Vector2.Zero;
         public bool DrawPope = false;
@@ -25,18 +25,22 @@ namespace TowerDefense
         {
 
         }
-
         public override void Update(GameTime gameTime)
         {
             Random rand = new Random();
 
-            if (GameScreen.Monkeys.Count > 1 && rand.Next(1, AtkDelay) == 100)
+            if (Monkeys.Count > 1)
             {
-                int i = rand.Next(1, GameScreen.Monkeys.Count);
+                int i = rand.Next(1, Monkeys.Count);
 
-                if (GameScreen.Monkeys[i].Placed)
+                if (Monkeys[i].Placed)     
                 {
-                    KillMonkey(i);
+                    FindTarget();
+                    if (!dartShot)
+                    {
+                        AddProjectile();
+                        dartShot = true;
+                    }
                     DrawPope = true;
                 }
             }
@@ -45,14 +49,14 @@ namespace TowerDefense
 
         public bool DartPredicate(Projectile me)
         {
-            FindTarget();
+            if (me.Pos.Intersects(GameDimensions)) return true;
             if (me.Pos.X < 0 || me.Pos.Y < 0 || me.Pos.X > GameDimensions.X + GameDimensions.Width || me.Pos.Y > GameDimensions.Y + GameDimensions.Height) return true;
 
             for (int i = 0; i < Monkeys.Count; i++)
             {
                 if (me.Pos.Intersects(Monkeys[i].Pos))
                 {
-                    Monkeys.RemoveAt(i);
+                    KillMonkey(i);
                     return true;
                 }
             }
@@ -60,7 +64,7 @@ namespace TowerDefense
         }
         public void FindTarget()
         {
-            if (Monkeys.Count == 0)
+            if (Monkeys.Count <= 1)
             {
                 Target = null;
                 return;
@@ -80,6 +84,10 @@ namespace TowerDefense
                 }
             }
             Target = Monkeys[index];
+            if (Target == Saint)
+            {
+                Target = null;
+            }
         }
         public void KillMonkey(int index)
         {
@@ -102,7 +110,7 @@ namespace TowerDefense
 
             float rotation = MathF.Atan2(Target.Pos.Y - Pos.Y, Target.Pos.X + offset - Pos.X);
 
-            projectiles.Add(new Projectile(manager[Textures.Dart], Pos, Color.Black, rotation, Vector2.Zero, Damage, 20, this, DartPredicate));
+            Player.projectiles.Add(new Projectile(manager[Textures.Dart], Pos, Color.Black, rotation, Vector2.Zero, 0, 20, DartPredicate));
         }
         public override void Draw(SpriteBatch spriteBatch)
         {
@@ -111,11 +119,8 @@ namespace TowerDefense
             if (DrawPope && DrawCounter <= DrawDelay)
             {
                 DrawCounter++;
-                spriteBatch.Draw(ContentManager.Instance[Textures.PopeSoldier], new Rectangle(0, 0, ContentManager.Instance[Textures.PopeSoldier].Width, ContentManager.Instance[Textures.PopeSoldier].Height), Color.White);
+                //spriteBatch.Draw(ContentManager.Instance[Textures.PopeSoldier], new Rectangle(0, 0, ContentManager.Instance[Textures.PopeSoldier].Width, ContentManager.Instance[Textures.PopeSoldier].Height), Color.White);
             }
-
-
-
             else
             {
                 DrawCounter = 0;

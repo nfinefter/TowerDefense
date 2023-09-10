@@ -14,19 +14,14 @@ namespace TowerDefense
         public int Level;
 
         public int XP;
-
-        public int Damage => Level * DmgMultiplier;
-
-        public int DmgMultiplier;
+        public int Damage => Level + 1;
 
         public int Range;
-
-        public PlayerBase(Texture2D tex, Rectangle pos, Color color, float rotation, Vector2 origin, List<Rectangle> sourceRectangle, int level, int xp, int dmgMultiplier, int range)
+        public PlayerBase(Texture2D tex, Rectangle pos, Color color, float rotation, Vector2 origin, List<Rectangle> sourceRectangle, int level, int xp, int range)
             : base(tex, pos, color, rotation, origin, sourceRectangle)
         {
             Level = level;
             XP = xp;
-            DmgMultiplier = dmgMultiplier;
             sourceRectangles = sourceRectangle;
             Range = range;
         }

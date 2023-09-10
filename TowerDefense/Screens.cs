@@ -9,15 +9,56 @@ using MonoGame.Extended;
 
 namespace TowerDefense
 {
-    public class MenuScreen : Screen
+
+    public class EndScreen : Screen
     {
-        public override void Draw(SpriteBatch spriteBatch)
+        string loseMsg = "You lose";
+        Button RestartButton;
+        Button ExitButton;
+        public EndScreen()
         {
-            throw new NotImplementedException();
+            RestartButton = new Button(Game1.pixel, new Rectangle((GameScreen.GameDimensions.X + GameScreen.GameDimensions.Width) / 2, (GameScreen.GameDimensions.Y + GameScreen.GameDimensions.Height) / 2, 100, 100), Color.Green, 0, "Restart", default);
+            ExitButton = new Button(Game1.pixel, new Rectangle((GameScreen.GameDimensions.X + GameScreen.GameDimensions.Width) / 2, (GameScreen.GameDimensions.Y + GameScreen.GameDimensions.Height) / 2 + 200, 100, 100), Color.Red, 0, "Exit", default);
+        }
+        public override void Draw(SpriteBatch graphics)
+        {
+            RestartButton.Draw(graphics);
+            ExitButton.Draw(graphics);
+            graphics.DrawString(GameScreen.Font, loseMsg, new Vector2((GameScreen.GameDimensions.X + GameScreen.GameDimensions.Width) / 2, (GameScreen.GameDimensions.Y + GameScreen.GameDimensions.Height) / 2), Color.Black);
         }
         public override Screenum Update(GameTime gameTime)
         {
-            if (Buttons[0].Pos.Contains(Mouse.GetState().Position) && ScreenManager.Instance.CurrentState == ButtonState.Pressed && ScreenManager.Instance.PrevState == ButtonState.Released)
+            if (RestartButton.Pos.Contains(Mouse.GetState().Position) && ScreenManager.Instance.CurrentState == ButtonState.Pressed && ScreenManager.Instance.PrevState == ButtonState.Released)
+            {
+                return Screenum.Game;
+            }
+            else if (ExitButton.Pos.Contains(Mouse.GetState().Position) && ScreenManager.Instance.CurrentState == ButtonState.Pressed && ScreenManager.Instance.PrevState == ButtonState.Released)
+            {
+                return Screenum.Menu;
+            }
+            return Screenum.End;
+        }
+    }
+    public class MenuScreen : Screen
+    {
+        Button StartButton;
+        Button DontStartButton;
+
+        public MenuScreen()
+        {
+            StartButton = new Button(Game1.pixel, new Rectangle((GameScreen.GameDimensions.X + GameScreen.GameDimensions.Width) / 2, (GameScreen.GameDimensions.Y + GameScreen.GameDimensions.Height) / 2, 100, 100), Color.Green, 0, "Start", default);
+            DontStartButton = new Button(Game1.pixel, new Rectangle((GameScreen.GameDimensions.X + GameScreen.GameDimensions.Width) / 2, (GameScreen.GameDimensions.Y + GameScreen.GameDimensions.Height) / 2 + 200, 100, 100), Color.Red, 0, "Back", default);
+        }
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            StartButton.Draw(spriteBatch);
+            DontStartButton.Draw(spriteBatch);
+            spriteBatch.DrawString(GameScreen.Font, "Start", new Vector2(StartButton.Pos.X, StartButton.Pos.Y), Color.Black);
+            spriteBatch.DrawString(GameScreen.Font, "Don't Start", new Vector2(DontStartButton.Pos.X, DontStartButton.Pos.Y), Color.Black);
+        }
+        public override Screenum Update(GameTime gameTime)
+        {
+            if (StartButton.Pos.Contains(Mouse.GetState().Position) && ScreenManager.Instance.CurrentState == ButtonState.Pressed && ScreenManager.Instance.PrevState == ButtonState.Released)
             {
                 return Screenum.Game;
             }
@@ -33,8 +74,9 @@ namespace TowerDefense
         public Player SelectedMonkey;
 
         public static int size = 40;
-        static public float Money = 1000;
-        static public int Health = 100;
+        public static float Money = 1000;
+        public static int Health = 100;
+        public static Player Saint;
         bool dragging = false;
 
         public Texture2D JesusImage;
@@ -44,18 +86,17 @@ namespace TowerDefense
         public Sprite MoneyIMG;
         public Sprite HealthIMG;
         public List<Rectangle> MonkeySource;
-        public Player Saint;
         bool illegalPos = false;
         public static List<Vertex<System.Drawing.Point>> Path = new List<Vertex<System.Drawing.Point>>();
         public static Rectangle GameDimensions;
         int pathDrawDelay = 0;
         public static Rectangle Start;
-        public SpriteFont Font;
+        public static SpriteFont Font;
 
         public int MapXBorder;
         public Map map = new Map();
 
-       
+
 
         public void Initialize()
         {
@@ -96,6 +137,7 @@ namespace TowerDefense
             spriteBatch.DrawString(Font, $"{Health}", new Vector2(HealthIMG.Pos.X + 50, HealthIMG.Pos.Y + 20), Color.Black);
             spriteBatch.DrawString(Font, "Cost :100", new Vector2(Monkeys[0].Pos.X + 50, Monkeys[0].Pos.Y + 20), Color.Black);
 
+
             for (int i = 0; i < pathDrawDelay; i++)
             {
                 spriteBatch.FillRectangle(new Rectangle(Path[i].Value.X, Path[i].Value.Y, GameScreen.size, GameScreen.size), Color.White, 0);
@@ -130,10 +172,14 @@ namespace TowerDefense
 
             DrawProjectiles();
         }
-
-
         public override Screenum Update(GameTime gameTime)
         {
+
+            if (Health <= 99)
+            {
+                return Screenum.End;
+            }
+
             for (int i = 0; i < Buttons.Count; i++)
             {
                 Buttons[i].Update(gameTime);
@@ -197,20 +243,17 @@ namespace TowerDefense
             //    return false;
             //};
 
-            //for (int i = 0; i < Bloons.Count; i++)
-            //{
-            //    if (EnemyManager.IsAttacked(Bloons[i]))
-            //    {
-            //        Bloons.RemoveAt(i);
-            //    }
-            //}
+            for (int i = 0; i < Bloons.Count; i++)
+            {
+                if (EnemyManager.IsAttacked(Bloons[i]))
+                {
+                    Bloons.RemoveAt(i);
+                }
+            }
             for (int i = 0; i < Player.projectiles.Count; i++)
             {
                 Player.projectiles[i].Update(gameTime);
             }
-
-
-            //killing = MonkeyKill(Monkeys, killing);
 
             EnemyManager.EnemyCreate(gameTime, ref Bloons);
 
@@ -235,14 +278,12 @@ namespace TowerDefense
             {
                 if (Monkeys.Contains(SelectedMonkey) && Monkeys.Count > 0 && SelectedMonkey.Level < 5 && !dragging && Money >= 100)
                 {
-                    SelectedMonkey.DmgMultiplier++;
                     Money -= 100;
                     SelectedMonkey.Level++;
                     PlayerManager.UpgradeDot(SelectedMonkey);
                 }
             }
         }
-
         void PlaceMonke()
         {
             illegalPos = false;
@@ -272,29 +313,6 @@ namespace TowerDefense
                 }
             }
         }
-
-        //public static bool MonkeyKill(List<Player> monkeys, bool killing)
-        //{
-        //    if (killing) return true;
-
-        //    Random rand = new Random();
-
-        //    if (rand.Next(1, 1001) == 100)
-        //    {
-        //        if (monkeys.Count > 2)
-        //        {
-        //            int i = rand.Next(1, monkeys.Count);
-
-        //            if (!monkeys[i].Placed) return false;
-
-        //            ProjectileRemover(monkeys[i]);
-        //            monkeys.RemoveAt(i);
-        //        }
-        //        return true;
-        //    }
-        //    return false;
-        //}
-
 
     }
 
