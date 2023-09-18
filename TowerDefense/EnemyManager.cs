@@ -61,9 +61,9 @@ namespace TowerDefense
 
         static TimeSpan moveTime = TimeSpan.FromSeconds(1);
         static TimeSpan moveWait;
-        static int min = 1;
-        static int max = 10;
-        static int minRank = 1;
+        static public int min = 1;
+        static public int max = 10;
+        static public int minRank = 1;
 
         public static void EnemyCreate(GameTime time, ref List<EnemyBase> bloons)
         {

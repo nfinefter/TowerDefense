@@ -6,12 +6,12 @@ using System;
 using System.Collections.Generic;
 using WeightedDirectedGraphs;
 using MonoGame.Extended;
-
 namespace TowerDefense
 {
 
     public class EndScreen : Screen
     {
+        public static bool Die = false;
         string loseMsg = "You lose";
         Button RestartButton;
         Button ExitButton;
@@ -24,17 +24,20 @@ namespace TowerDefense
         {
             RestartButton.Draw(graphics);
             ExitButton.Draw(graphics);
+            graphics.DrawString(GameScreen.Font, "RESTART", new Vector2(RestartButton.Pos.X, RestartButton.Pos.Y), Color.Black);
+            graphics.DrawString(GameScreen.Font, "EXIT", new Vector2(ExitButton.Pos.X, ExitButton.Pos.Y), Color.Black);
             graphics.DrawString(GameScreen.Font, loseMsg, new Vector2((GameScreen.GameDimensions.X + GameScreen.GameDimensions.Width) / 2, (GameScreen.GameDimensions.Y + GameScreen.GameDimensions.Height) / 2), Color.Black);
         }
         public override Screenum Update(GameTime gameTime)
         {
             if (RestartButton.Pos.Contains(Mouse.GetState().Position) && ScreenManager.Instance.CurrentState == ButtonState.Pressed && ScreenManager.Instance.PrevState == ButtonState.Released)
             {
+                GameScreen.Restart = true;
                 return Screenum.Game;
             }
             else if (ExitButton.Pos.Contains(Mouse.GetState().Position) && ScreenManager.Instance.CurrentState == ButtonState.Pressed && ScreenManager.Instance.PrevState == ButtonState.Released)
             {
-                return Screenum.Menu;
+                Die = true;
             }
             return Screenum.End;
         }
@@ -78,6 +81,7 @@ namespace TowerDefense
         public static int Health = 100;
         public static Player Saint;
         bool dragging = false;
+        public static bool Restart = false;
 
         public Texture2D JesusImage;
         public Texture2D BloonImage;
@@ -174,8 +178,9 @@ namespace TowerDefense
         }
         public override Screenum Update(GameTime gameTime)
         {
+            CheckRestart();
 
-            if (Health <= 99)
+            if (Health <= 0)
             {
                 return Screenum.End;
             }
@@ -260,6 +265,27 @@ namespace TowerDefense
             return Screenum.Game;
         }
 
+        public void CheckRestart()
+        {
+            if (Restart)
+            {
+                Restart = !Restart;
+
+                Money = 1000;
+                Health = 100;
+                for (int i = Monkeys.Count - 1; i > 0; i--)
+                {
+                    Monkeys.RemoveAt(i);
+                }
+                Bloons.Clear();
+                Path = map.GeneratePath(MapXBorder, Game1.GameHeight);
+                Start = new Rectangle(new Microsoft.Xna.Framework.Point(Path[0].Value.X, Path[0].Value.Y), new Point(40, 40));
+                pathDrawDelay = 0;
+                EnemyManager.min = 1;
+                EnemyManager.max = 10;
+                EnemyManager.minRank = 1;
+            }
+        }
         public void Sell()
         {
             if (Monkeys.Contains(SelectedMonkey) && Monkeys.Count > 1)
