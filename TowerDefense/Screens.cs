@@ -173,7 +173,6 @@ namespace TowerDefense
             }
             spriteBatch.DrawRectangle(SelectedMonkey.Hitbox, Color.Black, 1, 0);
 
-
             DrawProjectiles();
         }
         public override Screenum Update(GameTime gameTime)
