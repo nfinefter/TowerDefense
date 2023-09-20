@@ -22,17 +22,51 @@ namespace HelperLibrary
         Menu,
         End,
     }
-   
+
 
     public abstract class Screen
     {
-        public List<Sprite> Sprites = new List<Sprite>();
 
-        public List<Button> Buttons = new List<Button>();
+        public abstract void Begin();
 
         public abstract Screenum Update(GameTime gameTime);
 
         public abstract void Draw(SpriteBatch spriteBatch);
+    }
+
+    public class MenuScreen : Screen
+    {
+        public override void Begin()
+        {
+
+        }
+
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Screenum Update(GameTime gameTime)
+        {
+            throw new NotImplementedException();
+        }
+    }
+    public class GameScreen : Screen
+    {
+        public override void Begin()
+        {
+
+        }
+
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Screenum Update(GameTime gameTime)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class ScreenManager
