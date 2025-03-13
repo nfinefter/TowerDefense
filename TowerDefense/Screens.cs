@@ -20,6 +20,12 @@ namespace TowerDefense
             RestartButton = new Button(Game1.pixel, new Rectangle((GameScreen.GameDimensions.X + GameScreen.GameDimensions.Width) / 2, (GameScreen.GameDimensions.Y + GameScreen.GameDimensions.Height) / 2, 100, 100), Color.Green, 0, "Restart", default);
             ExitButton = new Button(Game1.pixel, new Rectangle((GameScreen.GameDimensions.X + GameScreen.GameDimensions.Width) / 2, (GameScreen.GameDimensions.Y + GameScreen.GameDimensions.Height) / 2 + 200, 100, 100), Color.Red, 0, "Exit", default);
         }
+
+        public override void Begin()
+        {
+            throw new NotImplementedException();
+        }
+
         public override void Draw(SpriteBatch graphics)
         {
             RestartButton.Draw(graphics);
@@ -52,6 +58,12 @@ namespace TowerDefense
             StartButton = new Button(Game1.pixel, new Rectangle((GameScreen.GameDimensions.X + GameScreen.GameDimensions.Width) / 2, (GameScreen.GameDimensions.Y + GameScreen.GameDimensions.Height) / 2, 100, 100), Color.Green, 0, "Start", default);
             DontStartButton = new Button(Game1.pixel, new Rectangle((GameScreen.GameDimensions.X + GameScreen.GameDimensions.Width) / 2, (GameScreen.GameDimensions.Y + GameScreen.GameDimensions.Height) / 2 + 200, 100, 100), Color.Red, 0, "Back", default);
         }
+
+        public override void Begin()
+        {
+            throw new NotImplementedException();
+        }
+
         public override void Draw(SpriteBatch spriteBatch)
         {
             StartButton.Draw(spriteBatch);
@@ -339,6 +351,10 @@ namespace TowerDefense
             }
         }
 
+        public override void Begin()
+        {
+            throw new NotImplementedException();
+        }
     }
 
 }

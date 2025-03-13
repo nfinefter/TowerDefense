@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace HelperLibrary
 {
-    public abstract class Sprite : SpriteBase
+    public sealed class Sprite : SpriteBase
     {
         Vector2 origin;
         public override Vector2 Origin { get => origin; }

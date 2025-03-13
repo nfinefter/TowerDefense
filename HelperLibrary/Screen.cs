@@ -26,7 +26,9 @@ namespace HelperLibrary
 
     public abstract class Screen
     {
+        public List<Sprite> Sprites = new List<Sprite>();
 
+        public List<Button> Buttons = new List<Button>();
         public abstract void Begin();
 
         public abstract Screenum Update(GameTime gameTime);
